@@ -59,7 +59,48 @@ real in-app purchases — these must be set up by the project owner
 
 ## Checkpoint 2 — Architecture & Data Model
 
-_Pending confirmation._
+**Status: Confirmed 2026-08-06.**
+
+- **Overall architecture pattern**: modular monolith, expressed as
+  domain-organized Postgres schemas/tables (`auth`, `logging`, `foods`,
+  `coaching`, `analytics`, `billing`) with Supabase Edge Functions grouped
+  by the same domains. Chosen over microservices (operational overhead not
+  justified pre-revenue) and over ungrouped fully-serverless functions
+  (gets unwieldy as feature count grows). Matches the phased build plan and
+  keeps cost/ops minimal.
+- **Core data model** (high level):
+  - `users` — profile, sex, height, DOB, activity level, unit preference,
+    coaching mode.
+  - `body_stats_history` — time-series of weight/height/body-fat estimate;
+    feeds the weight-trend smoothing.
+  - `daily_logs` / `log_entries` — timeline-style entries (not fixed meal
+    slots), each referencing a food/recipe with quantity, timestamp, and
+    log method (manual/barcode/photo/NL/quick-add).
+  - `foods` — normalized nutrition data (USDA + Open Food Facts + custom),
+    with `source` and `verified` flags.
+  - `recipes` / `recipe_ingredients` — supports nesting (an ingredient can
+    itself be a recipe).
+  - `targets` — **versioned**: one row per change
+    (`user_id, effective_date, calories, protein, carbs, fat, reasoning,
+    created_by`), never mutated in place — enables the transparency
+    requirement in Phase 3.
+  - `coaching_runs` — one row per weekly recalculation job execution:
+    inputs used, computed TDEE, resulting target change, coaching mode at
+    the time — the audit trail.
+  - `day_overrides` — per-day custom targets (e.g. training days).
+  - `subscription_state` — synced from RevenueCat webhooks.
+- **Adaptive coaching algorithm placement**: server-side, as a scheduled
+  Supabase Edge Function (pg_cron-triggered) running weekly per user. Reads
+  `daily_logs` + `body_stats_history`, writes a `coaching_runs` row and,
+  if the coaching mode allows it, a new `targets` row. Chosen over
+  client-side computation, which is unreliable (depends on the app being
+  opened) and complicates the audit trail.
+- **Offline-first strategy**: local SQLite (via `drift`) as the on-device
+  source of truth for logging, with a background sync queue to Supabase.
+  Writes always succeed locally first; sync reconciles when connectivity
+  returns. Chosen over relying on the Supabase client SDK's default
+  caching or requiring connectivity outright — offline logging is a hard
+  requirement for a food-logging app, not a nice-to-have.
 
 ## Checkpoint 3 — Design System & UX
 
