@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+.pub-cache/
+.dart_tool/
+Pods/
+
+# Build outputs
+build/
+dist/
+out/
+*.apk
+*.ipa
+*.app
+
+# Environment / secrets
+.env
+.env.local
+*.pem
+*.p8
+*.jks
+*.keystore
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Flutter/Dart (in case selected)
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+
+# React Native (in case selected)
+.expo/
+*.jsbundle
