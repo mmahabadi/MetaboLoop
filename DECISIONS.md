@@ -104,4 +104,27 @@ real in-app purchases — these must be set up by the project owner
 
 ## Checkpoint 3 — Design System & UX
 
-_Pending confirmation._
+**Status: Confirmed 2026-08-06.**
+
+- **Design/component library**: Material 3, heavily themed (custom color
+  scheme, typography, and a small set of custom components for macro rings,
+  trend charts, and the timeline log). Chosen over building a custom design
+  system from scratch (expensive, slows every future feature) and over a
+  Cupertino-adaptive hybrid (roughly doubles component work for marginal
+  benefit in a data-dense app). Cheapest to build/maintain and accessible
+  by default.
+- **Navigation pattern & IA**: bottom tab bar with four tabs — **Today**
+  (timeline log), **Trends** (dashboard/analytics), **Coach** (targets,
+  recalibration history, coaching mode), **Settings**. Chosen over a drawer,
+  which adds friction to core actions in an app used many times a day.
+- **Visual identity direction**: Direction A, clinical/minimal — neutral
+  grays plus one signal accent color, system-native sans typography —
+  as the base, with a dark-mode-first execution on the Trends screen
+  specifically (borrowed from the data-dense direction). Chosen because
+  it's the cheapest direction to theme well, fits a trust-first app whose
+  core value prop is accurate numbers rather than gamification, and is
+  easy to extend later without a redesign.
+- **Onboarding flow structure**: goal selection → body stats (age, sex,
+  height, weight, activity level) → initial macro estimate (labeled as a
+  starting estimate) → account creation → trial/paywall. Lets users see
+  their estimate before being asked to pay.
