@@ -239,3 +239,22 @@ class CycleEntries extends Table {
   @override
   Set<Column> get primaryKey => {id};
 }
+
+enum WorkoutType { strength, cardio, mobility, sport, other }
+
+/// A lightweight companion workout log — type, duration, and an optional
+/// self-reported calorie estimate. Deliberately not a full fitness tracker
+/// (no exercise library, sets/reps, or programming); the coaching
+/// algorithm doesn't consume this data, since it already infers total
+/// expenditure from logged intake and the weight trend.
+class Workouts extends Table {
+  TextColumn get id => text()();
+  DateTimeColumn get date => dateTime()();
+  TextColumn get type => textEnum<WorkoutType>()();
+  IntColumn get durationMinutes => integer()();
+  IntColumn get caloriesBurned => integer().nullable()();
+  TextColumn get notes => text().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
