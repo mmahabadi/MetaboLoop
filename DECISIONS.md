@@ -59,8 +59,72 @@ real in-app purchases — these must be set up by the project owner
 
 ## Checkpoint 2 — Architecture & Data Model
 
-_Pending confirmation._
+**Status: Confirmed 2026-08-06.**
+
+- **Overall architecture pattern**: modular monolith, expressed as
+  domain-organized Postgres schemas/tables (`auth`, `logging`, `foods`,
+  `coaching`, `analytics`, `billing`) with Supabase Edge Functions grouped
+  by the same domains. Chosen over microservices (operational overhead not
+  justified pre-revenue) and over ungrouped fully-serverless functions
+  (gets unwieldy as feature count grows). Matches the phased build plan and
+  keeps cost/ops minimal.
+- **Core data model** (high level):
+  - `users` — profile, sex, height, DOB, activity level, unit preference,
+    coaching mode.
+  - `body_stats_history` — time-series of weight/height/body-fat estimate;
+    feeds the weight-trend smoothing.
+  - `daily_logs` / `log_entries` — timeline-style entries (not fixed meal
+    slots), each referencing a food/recipe with quantity, timestamp, and
+    log method (manual/barcode/photo/NL/quick-add).
+  - `foods` — normalized nutrition data (USDA + Open Food Facts + custom),
+    with `source` and `verified` flags.
+  - `recipes` / `recipe_ingredients` — supports nesting (an ingredient can
+    itself be a recipe).
+  - `targets` — **versioned**: one row per change
+    (`user_id, effective_date, calories, protein, carbs, fat, reasoning,
+    created_by`), never mutated in place — enables the transparency
+    requirement in Phase 3.
+  - `coaching_runs` — one row per weekly recalculation job execution:
+    inputs used, computed TDEE, resulting target change, coaching mode at
+    the time — the audit trail.
+  - `day_overrides` — per-day custom targets (e.g. training days).
+  - `subscription_state` — synced from RevenueCat webhooks.
+- **Adaptive coaching algorithm placement**: server-side, as a scheduled
+  Supabase Edge Function (pg_cron-triggered) running weekly per user. Reads
+  `daily_logs` + `body_stats_history`, writes a `coaching_runs` row and,
+  if the coaching mode allows it, a new `targets` row. Chosen over
+  client-side computation, which is unreliable (depends on the app being
+  opened) and complicates the audit trail.
+- **Offline-first strategy**: local SQLite (via `drift`) as the on-device
+  source of truth for logging, with a background sync queue to Supabase.
+  Writes always succeed locally first; sync reconciles when connectivity
+  returns. Chosen over relying on the Supabase client SDK's default
+  caching or requiring connectivity outright — offline logging is a hard
+  requirement for a food-logging app, not a nice-to-have.
 
 ## Checkpoint 3 — Design System & UX
 
-_Pending confirmation._
+**Status: Confirmed 2026-08-06.**
+
+- **Design/component library**: Material 3, heavily themed (custom color
+  scheme, typography, and a small set of custom components for macro rings,
+  trend charts, and the timeline log). Chosen over building a custom design
+  system from scratch (expensive, slows every future feature) and over a
+  Cupertino-adaptive hybrid (roughly doubles component work for marginal
+  benefit in a data-dense app). Cheapest to build/maintain and accessible
+  by default.
+- **Navigation pattern & IA**: bottom tab bar with four tabs — **Today**
+  (timeline log), **Trends** (dashboard/analytics), **Coach** (targets,
+  recalibration history, coaching mode), **Settings**. Chosen over a drawer,
+  which adds friction to core actions in an app used many times a day.
+- **Visual identity direction**: Direction A, clinical/minimal — neutral
+  grays plus one signal accent color, system-native sans typography —
+  as the base, with a dark-mode-first execution on the Trends screen
+  specifically (borrowed from the data-dense direction). Chosen because
+  it's the cheapest direction to theme well, fits a trust-first app whose
+  core value prop is accurate numbers rather than gamification, and is
+  easy to extend later without a redesign.
+- **Onboarding flow structure**: goal selection → body stats (age, sex,
+  height, weight, activity level) → initial macro estimate (labeled as a
+  starting estimate) → account creation → trial/paywall. Lets users see
+  their estimate before being asked to pay.
