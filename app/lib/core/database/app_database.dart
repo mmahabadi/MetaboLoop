@@ -3,7 +3,7 @@ import 'package:drift/drift.dart';
 import 'tables.dart';
 
 export 'tables.dart'
-    show FoodSource, LogMethod, TargetSource, CoachingRunOutcome;
+    show FoodSource, LogMethod, TargetSource, CoachingRunOutcome, WorkoutType;
 
 part 'app_database.g.dart';
 
@@ -22,13 +22,14 @@ part 'app_database.g.dart';
     Habits,
     HabitCompletions,
     CycleEntries,
+    Workouts,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -316,5 +317,21 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> deleteCycleEntry(String id) {
     return (delete(cycleEntries)..where((c) => c.id.equals(id))).go();
+  }
+
+  // --- Workouts ---
+
+  Future<void> insertWorkout(WorkoutsCompanion workout) {
+    return into(workouts).insert(workout);
+  }
+
+  Stream<List<Workout>> watchWorkouts() {
+    return (select(
+      workouts,
+    )..orderBy([(w) => OrderingTerm.desc(w.date)])).watch();
+  }
+
+  Future<void> deleteWorkout(String id) {
+    return (delete(workouts)..where((w) => w.id.equals(id))).go();
   }
 }

@@ -17,6 +17,7 @@ import '../../features/onboarding/presentation/welcome_screen.dart';
 import '../../features/paywall/presentation/paywall_screen.dart';
 import '../../features/progress/presentation/progress_screen.dart';
 import '../../features/recipes/presentation/recipe_list_screen.dart';
+import '../../features/workouts/presentation/workouts_screen.dart';
 
 abstract final class AppRoutes {
   static const welcome = '/onboarding/welcome';
@@ -37,6 +38,7 @@ abstract final class AppRoutes {
   static const recipes = '/recipes';
   static const progress = '/progress';
   static const cycle = '/cycle';
+  static const workouts = '/workouts';
 }
 
 final appRouter = GoRouter(
@@ -109,6 +111,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.cycle,
       builder: (context, state) => const CycleScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.workouts,
+      builder: (context, state) => const WorkoutsScreen(),
     ),
   ],
 );

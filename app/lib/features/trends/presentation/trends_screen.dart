@@ -45,6 +45,11 @@ class TrendsScreen extends ConsumerWidget {
             onPressed: () => context.push(AppRoutes.cycle),
           ),
           IconButton(
+            icon: const Icon(Icons.fitness_center_outlined),
+            tooltip: 'Workouts',
+            onPressed: () => context.push(AppRoutes.workouts),
+          ),
+          IconButton(
             icon: const Icon(Icons.ios_share),
             tooltip: 'Export data as CSV',
             onPressed: () => _exportCsv(context, ref),
