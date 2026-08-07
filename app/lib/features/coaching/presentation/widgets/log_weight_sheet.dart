@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/units/units.dart';
+import '../../../../core/units/units_providers.dart';
 import '../../application/coaching_providers.dart';
 
 Future<void> showLogWeightSheet(BuildContext context) {
@@ -29,18 +31,24 @@ class _LogWeightSheetState extends ConsumerState<_LogWeightSheet> {
     super.dispose();
   }
 
-  Future<void> _save() async {
-    final weight = double.tryParse(_controller.text);
-    if (weight == null || weight <= 0) return;
+  Future<void> _save(UnitSystem unitSystem) async {
+    final entered = double.tryParse(_controller.text);
+    if (entered == null || entered <= 0) return;
+    final weightKg = unitSystem == UnitSystem.imperial
+        ? lbToKg(entered)
+        : entered;
     setState(() => _saving = true);
     await ref
         .read(weightRepositoryProvider)
-        .logWeight(date: DateTime.now(), weightKg: weight);
+        .logWeight(date: DateTime.now(), weightKg: weightKg);
     if (mounted) Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
+    final unitSystem = ref.watch(unitSystemProvider).value ?? UnitSystem.metric;
+    final unitLabel = unitSystem == UnitSystem.imperial ? 'lb' : 'kg';
+
     return Padding(
       padding: EdgeInsets.fromLTRB(
         24,
@@ -64,13 +72,13 @@ class _LogWeightSheetState extends ConsumerState<_LogWeightSheet> {
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
             ],
-            decoration: const InputDecoration(labelText: 'Weight (kg)'),
+            decoration: InputDecoration(labelText: 'Weight ($unitLabel)'),
             onChanged: (_) => setState(() {}),
           ),
           const SizedBox(height: 24),
           FilledButton(
             onPressed: !_saving && double.tryParse(_controller.text) != null
-                ? _save
+                ? () => _save(unitSystem)
                 : null,
             child: _saving
                 ? const SizedBox(
