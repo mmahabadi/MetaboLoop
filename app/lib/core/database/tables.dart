@@ -18,6 +18,12 @@ class LocalFoods extends Table {
   RealColumn get fatPer100gGrams => real()();
   RealColumn get defaultServingGrams => real().nullable()();
   TextColumn get defaultServingLabel => text().nullable()();
+  // Core micronutrient subset (Phase 4) — not a full vitamin/mineral panel,
+  // scoped down given time constraints. Nullable since most sources
+  // (especially custom/AI-generated foods) won't always have this data.
+  RealColumn get fiberPer100gGrams => real().nullable()();
+  RealColumn get sugarPer100gGrams => real().nullable()();
+  RealColumn get sodiumPer100gMg => real().nullable()();
   TextColumn get source => textEnum<FoodSource>()();
   BoolColumn get isVerified => boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
@@ -67,6 +73,9 @@ class LogEntries extends Table {
   RealColumn get carbsGrams => real()();
   RealColumn get fatGrams => real()();
   TextColumn get quantityLabel => text()();
+  RealColumn get fiberGrams => real().nullable()();
+  RealColumn get sugarGrams => real().nullable()();
+  RealColumn get sodiumMg => real().nullable()();
   TextColumn get method => textEnum<LogMethod>()();
   TextColumn get sourceFoodId =>
       text().nullable().references(LocalFoods, #id)();
@@ -160,6 +169,72 @@ class DayOverrides extends Table {
   RealColumn get carbsGrams => real()();
   RealColumn get fatGrams => real()();
   TextColumn get label => text().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+/// Body measurements (Phase 4) — a fixed set of common measurements rather
+/// than a fully flexible key-value model, kept simple given time
+/// constraints. One row per day; all fields optional so the user can log
+/// only what they measured.
+class BodyMeasurements extends Table {
+  TextColumn get id => text()();
+  DateTimeColumn get date => dateTime()();
+  RealColumn get waistCm => real().nullable()();
+  RealColumn get chestCm => real().nullable()();
+  RealColumn get hipsCm => real().nullable()();
+  RealColumn get armCm => real().nullable()();
+  RealColumn get thighCm => real().nullable()();
+  TextColumn get notes => text().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+/// A progress photo — the file itself lives on disk (native platforms
+/// only, see progress_photo_repository.dart); this row is the index plus
+/// the date it's associated with, for the side-by-side comparison view.
+class ProgressPhotos extends Table {
+  TextColumn get id => text()();
+  DateTimeColumn get date => dateTime()();
+  TextColumn get filePath => text()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+/// A user-defined habit to track daily (e.g. "10k steps", "No alcohol").
+class Habits extends Table {
+  TextColumn get id => text()();
+  TextColumn get name => text()();
+  BoolColumn get archived => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+/// A single day's check-off for a habit — a row's presence means done;
+/// there's no "false" state, an unchecked day just has no row.
+class HabitCompletions extends Table {
+  TextColumn get id => text()();
+  @ReferenceName('completions')
+  TextColumn get habitId =>
+      text().references(Habits, #id, onDelete: KeyAction.cascade)();
+  DateTimeColumn get date => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+/// Optional cycle/period tracking — just logged start dates; the current
+/// cycle day and phase are estimated from the history of these, not stored.
+class CycleEntries extends Table {
+  TextColumn get id => text()();
+  DateTimeColumn get startDate => dateTime()();
+  TextColumn get notes => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};

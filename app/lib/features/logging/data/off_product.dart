@@ -9,6 +9,9 @@ class OffProduct {
     required this.proteinPer100gGrams,
     required this.carbsPer100gGrams,
     required this.fatPer100gGrams,
+    this.fiberPer100gGrams,
+    this.sugarPer100gGrams,
+    this.sodiumPer100gMg,
     this.servingSizeLabel,
   });
 
@@ -19,6 +22,9 @@ class OffProduct {
   final double proteinPer100gGrams;
   final double carbsPer100gGrams;
   final double fatPer100gGrams;
+  final double? fiberPer100gGrams;
+  final double? sugarPer100gGrams;
+  final double? sodiumPer100gMg;
   final String? servingSizeLabel;
 
   /// Parses a single OFF "product" JSON object. Returns null when the
@@ -34,6 +40,9 @@ class OffProduct {
     final calories = _asDouble(nutriments['energy-kcal_100g']);
     if (calories == null) return null;
 
+    // OFF reports sodium in grams per 100g; the app stores it in mg.
+    final sodiumGrams = _asDouble(nutriments['sodium_100g']);
+
     return OffProduct(
       barcode: (json['code'] as String?) ?? '',
       name: name,
@@ -42,6 +51,9 @@ class OffProduct {
       proteinPer100gGrams: _asDouble(nutriments['proteins_100g']) ?? 0,
       carbsPer100gGrams: _asDouble(nutriments['carbohydrates_100g']) ?? 0,
       fatPer100gGrams: _asDouble(nutriments['fat_100g']) ?? 0,
+      fiberPer100gGrams: _asDouble(nutriments['fiber_100g']),
+      sugarPer100gGrams: _asDouble(nutriments['sugars_100g']),
+      sodiumPer100gMg: sodiumGrams == null ? null : sodiumGrams * 1000,
       servingSizeLabel: json['serving_size'] as String?,
     );
   }

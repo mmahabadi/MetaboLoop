@@ -17,13 +17,31 @@ part 'app_database.g.dart';
     Targets,
     CoachingRuns,
     DayOverrides,
+    BodyMeasurements,
+    ProgressPhotos,
+    Habits,
+    HabitCompletions,
+    CycleEntries,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onUpgrade: (migrator, from, to) async {
+      // Pre-launch: no real user data at stake yet, so schema changes just
+      // recreate everything rather than writing per-version migrations.
+      // Replace with real migrations before this ships with real users.
+      for (final table in allTables) {
+        await migrator.deleteTable(table.actualTableName);
+      }
+      await migrator.createAll();
+    },
+  );
 
   Future<List<LocalFood>> searchLocalFoods(String query) {
     final pattern = '%${query.trim()}%';
@@ -67,6 +85,14 @@ class AppDatabase extends _$AppDatabase {
           ..where((e) => e.loggedAt.isBetweenValues(start, end))
           ..orderBy([(e) => OrderingTerm.asc(e.loggedAt)]))
         .get();
+  }
+
+  /// Every log entry ever recorded, oldest first — used for full-history
+  /// CSV export rather than any on-screen view.
+  Future<List<LogEntry>> getAllLogEntries() {
+    return (select(
+      logEntries,
+    )..orderBy([(e) => OrderingTerm.asc(e.loggedAt)])).get();
   }
 
   Future<String> insertRecipe(RecipesCompanion recipe) async {
@@ -195,5 +221,100 @@ class AppDatabase extends _$AppDatabase {
     return (select(
       dayOverrides,
     )..where((o) => o.date.equals(day))).getSingleOrNull();
+  }
+
+  // --- Body measurements ---
+
+  Future<void> upsertBodyMeasurement(BodyMeasurementsCompanion measurement) {
+    return into(bodyMeasurements).insertOnConflictUpdate(measurement);
+  }
+
+  Stream<List<BodyMeasurement>> watchBodyMeasurements() {
+    return (select(
+      bodyMeasurements,
+    )..orderBy([(m) => OrderingTerm.desc(m.date)])).watch();
+  }
+
+  // --- Progress photos ---
+
+  Future<void> insertProgressPhoto(ProgressPhotosCompanion photo) {
+    return into(progressPhotos).insert(photo);
+  }
+
+  Future<void> deleteProgressPhoto(String id) {
+    return (delete(progressPhotos)..where((p) => p.id.equals(id))).go();
+  }
+
+  Stream<List<ProgressPhoto>> watchProgressPhotos() {
+    return (select(
+      progressPhotos,
+    )..orderBy([(p) => OrderingTerm.desc(p.date)])).watch();
+  }
+
+  // --- Habits ---
+
+  Future<void> insertHabit(HabitsCompanion habit) {
+    return into(habits).insert(habit);
+  }
+
+  Future<void> archiveHabit(String id) {
+    return (update(habits)..where((h) => h.id.equals(id))).write(
+      const HabitsCompanion(archived: Value(true)),
+    );
+  }
+
+  Stream<List<Habit>> watchActiveHabits() {
+    return (select(habits)
+          ..where((h) => h.archived.equals(false))
+          ..orderBy([(h) => OrderingTerm.asc(h.createdAt)]))
+        .watch();
+  }
+
+  Future<void> toggleHabitCompletion(String habitId, DateTime date) async {
+    final day = DateTime(date.year, date.month, date.day);
+    final existing =
+        await (select(habitCompletions)
+              ..where((c) => c.habitId.equals(habitId) & c.date.equals(day)))
+            .getSingleOrNull();
+    if (existing != null) {
+      await (delete(
+        habitCompletions,
+      )..where((c) => c.id.equals(existing.id))).go();
+    } else {
+      await into(habitCompletions).insert(
+        HabitCompletionsCompanion.insert(
+          id: '$habitId-${day.toIso8601String()}',
+          habitId: habitId,
+          date: day,
+        ),
+      );
+    }
+  }
+
+  Stream<List<HabitCompletion>> watchHabitCompletionsForDate(DateTime date) {
+    final day = DateTime(date.year, date.month, date.day);
+    return (select(habitCompletions)..where((c) => c.date.equals(day))).watch();
+  }
+
+  // --- Cycle tracking ---
+
+  Future<void> insertCycleEntry(CycleEntriesCompanion entry) {
+    return into(cycleEntries).insert(entry);
+  }
+
+  Future<List<CycleEntry>> getCycleEntries() {
+    return (select(
+      cycleEntries,
+    )..orderBy([(c) => OrderingTerm.desc(c.startDate)])).get();
+  }
+
+  Stream<List<CycleEntry>> watchCycleEntries() {
+    return (select(
+      cycleEntries,
+    )..orderBy([(c) => OrderingTerm.desc(c.startDate)])).watch();
+  }
+
+  Future<void> deleteCycleEntry(String id) {
+    return (delete(cycleEntries)..where((c) => c.id.equals(id))).go();
   }
 }
