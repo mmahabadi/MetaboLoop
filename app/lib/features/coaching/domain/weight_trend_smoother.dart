@@ -30,4 +30,22 @@ abstract final class WeightTrendSmoother {
     }
     return trend;
   }
+
+  /// The trend value at every entry, in the same order as
+  /// [entriesAscending] — for plotting a smoothed line alongside the raw
+  /// readings (Phase 4's Trends dashboard).
+  static List<double> trendSeries(
+    List<WeightEntry> entriesAscending, {
+    double alpha = defaultAlpha,
+  }) {
+    final series = <double>[];
+    double? trend;
+    for (final entry in entriesAscending) {
+      trend = trend == null
+          ? entry.weightKg
+          : alpha * entry.weightKg + (1 - alpha) * trend;
+      series.add(trend);
+    }
+    return series;
+  }
 }

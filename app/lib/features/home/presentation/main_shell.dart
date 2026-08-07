@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../coaching/presentation/coach_screen.dart';
 import '../../logging/presentation/today_screen.dart';
+import '../../trends/presentation/trends_screen.dart';
 
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
@@ -19,7 +20,11 @@ class _MainShellState extends State<MainShell> {
       label: 'Today',
       builder: TodayScreen.new,
     ),
-    _TabSpec(icon: Icons.show_chart_rounded, label: 'Trends', phase: 'Phase 4'),
+    _TabSpec(
+      icon: Icons.show_chart_rounded,
+      label: 'Trends',
+      builder: TrendsScreen.new,
+    ),
     _TabSpec(
       icon: Icons.psychology_alt_rounded,
       label: 'Coach',

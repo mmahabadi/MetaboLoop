@@ -23,6 +23,9 @@ void main() {
                   'proteins_100g': 1.1,
                   'carbohydrates_100g': 22.8,
                   'fat_100g': 0.3,
+                  'fiber_100g': 2.6,
+                  'sugars_100g': 12.2,
+                  'sodium_100g': 0.001,
                 },
                 'serving_size': '118 g',
               },
@@ -44,6 +47,10 @@ void main() {
       expect(product.proteinPer100gGrams, 1.1);
       expect(product.carbsPer100gGrams, 22.8);
       expect(product.fatPer100gGrams, 0.3);
+      expect(product.fiberPer100gGrams, 2.6);
+      expect(product.sugarPer100gGrams, 12.2);
+      // OFF reports sodium in grams per 100g; the client converts to mg.
+      expect(product.sodiumPer100gMg, closeTo(1, 0.001));
       expect(product.servingSizeLabel, '118 g');
     });
 

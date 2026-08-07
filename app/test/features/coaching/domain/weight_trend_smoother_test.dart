@@ -76,4 +76,28 @@ void main() {
       expect(trend, 75.0);
     });
   });
+
+  group('WeightTrendSmoother.trendSeries', () {
+    test('matches trendWeightAsOf at each point, using the same fixture', () {
+      final entries = [
+        _entry(1, 80.0),
+        _entry(2, 80.5),
+        _entry(3, 79.8),
+        _entry(4, 80.2),
+        _entry(5, 79.5),
+      ];
+      const expected = [80.0, 80.05, 80.025, 80.0425, 79.98825];
+
+      final series = WeightTrendSmoother.trendSeries(entries);
+
+      expect(series.length, 5);
+      for (var i = 0; i < expected.length; i++) {
+        expect(series[i], closeTo(expected[i], 0.00001));
+      }
+    });
+
+    test('returns an empty series for no entries', () {
+      expect(WeightTrendSmoother.trendSeries(const []), isEmpty);
+    });
+  });
 }

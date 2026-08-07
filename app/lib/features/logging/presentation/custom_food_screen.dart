@@ -22,6 +22,9 @@ class _CustomFoodScreenState extends ConsumerState<CustomFoodScreen> {
   final _proteinController = TextEditingController();
   final _carbsController = TextEditingController();
   final _fatController = TextEditingController();
+  final _fiberController = TextEditingController();
+  final _sugarController = TextEditingController();
+  final _sodiumController = TextEditingController();
   bool _saving = false;
 
   @override
@@ -32,6 +35,9 @@ class _CustomFoodScreenState extends ConsumerState<CustomFoodScreen> {
     _proteinController.dispose();
     _carbsController.dispose();
     _fatController.dispose();
+    _fiberController.dispose();
+    _sugarController.dispose();
+    _sodiumController.dispose();
     super.dispose();
   }
 
@@ -53,6 +59,9 @@ class _CustomFoodScreenState extends ConsumerState<CustomFoodScreen> {
           proteinPer100gGrams: double.tryParse(_proteinController.text) ?? 0,
           carbsPer100gGrams: double.tryParse(_carbsController.text) ?? 0,
           fatPer100gGrams: double.tryParse(_fatController.text) ?? 0,
+          fiberPer100gGrams: double.tryParse(_fiberController.text),
+          sugarPer100gGrams: double.tryParse(_sugarController.text),
+          sodiumPer100gMg: double.tryParse(_sodiumController.text),
         );
 
     if (!mounted) return;
@@ -125,6 +134,41 @@ class _CustomFoodScreenState extends ConsumerState<CustomFoodScreen> {
                       controller: _fatController,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(labelText: 'Fat (g)'),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'Micronutrients per 100 g (optional)',
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _fiberController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(labelText: 'Fiber (g)'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _sugarController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(labelText: 'Sugar (g)'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _sodiumController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        labelText: 'Sodium (mg)',
+                      ),
                     ),
                   ),
                 ],

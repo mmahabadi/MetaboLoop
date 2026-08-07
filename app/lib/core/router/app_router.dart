@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 
 import '../../features/auth/presentation/sign_in_screen.dart';
+import '../../features/cycle/presentation/cycle_screen.dart';
 import '../../features/home/presentation/main_shell.dart';
 import '../../features/logging/presentation/barcode_scanner_screen.dart';
 import '../../features/logging/presentation/custom_food_screen.dart';
@@ -14,6 +15,7 @@ import '../../features/onboarding/presentation/goal_selection_screen.dart';
 import '../../features/onboarding/presentation/macro_estimate_screen.dart';
 import '../../features/onboarding/presentation/welcome_screen.dart';
 import '../../features/paywall/presentation/paywall_screen.dart';
+import '../../features/progress/presentation/progress_screen.dart';
 import '../../features/recipes/presentation/recipe_list_screen.dart';
 
 abstract final class AppRoutes {
@@ -33,6 +35,8 @@ abstract final class AppRoutes {
   static const logDescribe = '/log/describe';
   static const logCustomFood = '/log/custom-food';
   static const recipes = '/recipes';
+  static const progress = '/progress';
+  static const cycle = '/cycle';
 }
 
 final appRouter = GoRouter(
@@ -97,6 +101,14 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.recipes,
       builder: (context, state) => const RecipeListScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.progress,
+      builder: (context, state) => const ProgressScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.cycle,
+      builder: (context, state) => const CycleScreen(),
     ),
   ],
 );

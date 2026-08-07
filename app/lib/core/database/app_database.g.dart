@@ -114,6 +114,41 @@ class $LocalFoodsTable extends LocalFoods
         type: DriftSqlType.string,
         requiredDuringInsert: false,
       );
+  static const VerificationMeta _fiberPer100gGramsMeta = const VerificationMeta(
+    'fiberPer100gGrams',
+  );
+  @override
+  late final GeneratedColumn<double> fiberPer100gGrams =
+      GeneratedColumn<double>(
+        'fiber_per100g_grams',
+        aliasedName,
+        true,
+        type: DriftSqlType.double,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _sugarPer100gGramsMeta = const VerificationMeta(
+    'sugarPer100gGrams',
+  );
+  @override
+  late final GeneratedColumn<double> sugarPer100gGrams =
+      GeneratedColumn<double>(
+        'sugar_per100g_grams',
+        aliasedName,
+        true,
+        type: DriftSqlType.double,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _sodiumPer100gMgMeta = const VerificationMeta(
+    'sodiumPer100gMg',
+  );
+  @override
+  late final GeneratedColumn<double> sodiumPer100gMg = GeneratedColumn<double>(
+    'sodium_per100g_mg',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
   @override
   late final GeneratedColumnWithTypeConverter<FoodSource, String> source =
       GeneratedColumn<String>(
@@ -162,6 +197,9 @@ class $LocalFoodsTable extends LocalFoods
     fatPer100gGrams,
     defaultServingGrams,
     defaultServingLabel,
+    fiberPer100gGrams,
+    sugarPer100gGrams,
+    sodiumPer100gMg,
     source,
     isVerified,
     createdAt,
@@ -265,6 +303,33 @@ class $LocalFoodsTable extends LocalFoods
         ),
       );
     }
+    if (data.containsKey('fiber_per100g_grams')) {
+      context.handle(
+        _fiberPer100gGramsMeta,
+        fiberPer100gGrams.isAcceptableOrUnknown(
+          data['fiber_per100g_grams']!,
+          _fiberPer100gGramsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('sugar_per100g_grams')) {
+      context.handle(
+        _sugarPer100gGramsMeta,
+        sugarPer100gGrams.isAcceptableOrUnknown(
+          data['sugar_per100g_grams']!,
+          _sugarPer100gGramsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('sodium_per100g_mg')) {
+      context.handle(
+        _sodiumPer100gMgMeta,
+        sodiumPer100gMg.isAcceptableOrUnknown(
+          data['sodium_per100g_mg']!,
+          _sodiumPer100gMgMeta,
+        ),
+      );
+    }
     if (data.containsKey('is_verified')) {
       context.handle(
         _isVerifiedMeta,
@@ -326,6 +391,18 @@ class $LocalFoodsTable extends LocalFoods
         DriftSqlType.string,
         data['${effectivePrefix}default_serving_label'],
       ),
+      fiberPer100gGrams: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}fiber_per100g_grams'],
+      ),
+      sugarPer100gGrams: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}sugar_per100g_grams'],
+      ),
+      sodiumPer100gMg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}sodium_per100g_mg'],
+      ),
       source: $LocalFoodsTable.$convertersource.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
@@ -363,6 +440,9 @@ class LocalFood extends DataClass implements Insertable<LocalFood> {
   final double fatPer100gGrams;
   final double? defaultServingGrams;
   final String? defaultServingLabel;
+  final double? fiberPer100gGrams;
+  final double? sugarPer100gGrams;
+  final double? sodiumPer100gMg;
   final FoodSource source;
   final bool isVerified;
   final DateTime createdAt;
@@ -377,6 +457,9 @@ class LocalFood extends DataClass implements Insertable<LocalFood> {
     required this.fatPer100gGrams,
     this.defaultServingGrams,
     this.defaultServingLabel,
+    this.fiberPer100gGrams,
+    this.sugarPer100gGrams,
+    this.sodiumPer100gMg,
     required this.source,
     required this.isVerified,
     required this.createdAt,
@@ -401,6 +484,15 @@ class LocalFood extends DataClass implements Insertable<LocalFood> {
     }
     if (!nullToAbsent || defaultServingLabel != null) {
       map['default_serving_label'] = Variable<String>(defaultServingLabel);
+    }
+    if (!nullToAbsent || fiberPer100gGrams != null) {
+      map['fiber_per100g_grams'] = Variable<double>(fiberPer100gGrams);
+    }
+    if (!nullToAbsent || sugarPer100gGrams != null) {
+      map['sugar_per100g_grams'] = Variable<double>(sugarPer100gGrams);
+    }
+    if (!nullToAbsent || sodiumPer100gMg != null) {
+      map['sodium_per100g_mg'] = Variable<double>(sodiumPer100gMg);
     }
     {
       map['source'] = Variable<String>(
@@ -432,6 +524,15 @@ class LocalFood extends DataClass implements Insertable<LocalFood> {
       defaultServingLabel: defaultServingLabel == null && nullToAbsent
           ? const Value.absent()
           : Value(defaultServingLabel),
+      fiberPer100gGrams: fiberPer100gGrams == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fiberPer100gGrams),
+      sugarPer100gGrams: sugarPer100gGrams == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sugarPer100gGrams),
+      sodiumPer100gMg: sodiumPer100gMg == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sodiumPer100gMg),
       source: Value(source),
       isVerified: Value(isVerified),
       createdAt: Value(createdAt),
@@ -460,6 +561,13 @@ class LocalFood extends DataClass implements Insertable<LocalFood> {
       defaultServingLabel: serializer.fromJson<String?>(
         json['defaultServingLabel'],
       ),
+      fiberPer100gGrams: serializer.fromJson<double?>(
+        json['fiberPer100gGrams'],
+      ),
+      sugarPer100gGrams: serializer.fromJson<double?>(
+        json['sugarPer100gGrams'],
+      ),
+      sodiumPer100gMg: serializer.fromJson<double?>(json['sodiumPer100gMg']),
       source: $LocalFoodsTable.$convertersource.fromJson(
         serializer.fromJson<String>(json['source']),
       ),
@@ -481,6 +589,9 @@ class LocalFood extends DataClass implements Insertable<LocalFood> {
       'fatPer100gGrams': serializer.toJson<double>(fatPer100gGrams),
       'defaultServingGrams': serializer.toJson<double?>(defaultServingGrams),
       'defaultServingLabel': serializer.toJson<String?>(defaultServingLabel),
+      'fiberPer100gGrams': serializer.toJson<double?>(fiberPer100gGrams),
+      'sugarPer100gGrams': serializer.toJson<double?>(sugarPer100gGrams),
+      'sodiumPer100gMg': serializer.toJson<double?>(sodiumPer100gMg),
       'source': serializer.toJson<String>(
         $LocalFoodsTable.$convertersource.toJson(source),
       ),
@@ -500,6 +611,9 @@ class LocalFood extends DataClass implements Insertable<LocalFood> {
     double? fatPer100gGrams,
     Value<double?> defaultServingGrams = const Value.absent(),
     Value<String?> defaultServingLabel = const Value.absent(),
+    Value<double?> fiberPer100gGrams = const Value.absent(),
+    Value<double?> sugarPer100gGrams = const Value.absent(),
+    Value<double?> sodiumPer100gMg = const Value.absent(),
     FoodSource? source,
     bool? isVerified,
     DateTime? createdAt,
@@ -518,6 +632,15 @@ class LocalFood extends DataClass implements Insertable<LocalFood> {
     defaultServingLabel: defaultServingLabel.present
         ? defaultServingLabel.value
         : this.defaultServingLabel,
+    fiberPer100gGrams: fiberPer100gGrams.present
+        ? fiberPer100gGrams.value
+        : this.fiberPer100gGrams,
+    sugarPer100gGrams: sugarPer100gGrams.present
+        ? sugarPer100gGrams.value
+        : this.sugarPer100gGrams,
+    sodiumPer100gMg: sodiumPer100gMg.present
+        ? sodiumPer100gMg.value
+        : this.sodiumPer100gMg,
     source: source ?? this.source,
     isVerified: isVerified ?? this.isVerified,
     createdAt: createdAt ?? this.createdAt,
@@ -546,6 +669,15 @@ class LocalFood extends DataClass implements Insertable<LocalFood> {
       defaultServingLabel: data.defaultServingLabel.present
           ? data.defaultServingLabel.value
           : this.defaultServingLabel,
+      fiberPer100gGrams: data.fiberPer100gGrams.present
+          ? data.fiberPer100gGrams.value
+          : this.fiberPer100gGrams,
+      sugarPer100gGrams: data.sugarPer100gGrams.present
+          ? data.sugarPer100gGrams.value
+          : this.sugarPer100gGrams,
+      sodiumPer100gMg: data.sodiumPer100gMg.present
+          ? data.sodiumPer100gMg.value
+          : this.sodiumPer100gMg,
       source: data.source.present ? data.source.value : this.source,
       isVerified: data.isVerified.present
           ? data.isVerified.value
@@ -567,6 +699,9 @@ class LocalFood extends DataClass implements Insertable<LocalFood> {
           ..write('fatPer100gGrams: $fatPer100gGrams, ')
           ..write('defaultServingGrams: $defaultServingGrams, ')
           ..write('defaultServingLabel: $defaultServingLabel, ')
+          ..write('fiberPer100gGrams: $fiberPer100gGrams, ')
+          ..write('sugarPer100gGrams: $sugarPer100gGrams, ')
+          ..write('sodiumPer100gMg: $sodiumPer100gMg, ')
           ..write('source: $source, ')
           ..write('isVerified: $isVerified, ')
           ..write('createdAt: $createdAt')
@@ -586,6 +721,9 @@ class LocalFood extends DataClass implements Insertable<LocalFood> {
     fatPer100gGrams,
     defaultServingGrams,
     defaultServingLabel,
+    fiberPer100gGrams,
+    sugarPer100gGrams,
+    sodiumPer100gMg,
     source,
     isVerified,
     createdAt,
@@ -604,6 +742,9 @@ class LocalFood extends DataClass implements Insertable<LocalFood> {
           other.fatPer100gGrams == this.fatPer100gGrams &&
           other.defaultServingGrams == this.defaultServingGrams &&
           other.defaultServingLabel == this.defaultServingLabel &&
+          other.fiberPer100gGrams == this.fiberPer100gGrams &&
+          other.sugarPer100gGrams == this.sugarPer100gGrams &&
+          other.sodiumPer100gMg == this.sodiumPer100gMg &&
           other.source == this.source &&
           other.isVerified == this.isVerified &&
           other.createdAt == this.createdAt);
@@ -620,6 +761,9 @@ class LocalFoodsCompanion extends UpdateCompanion<LocalFood> {
   final Value<double> fatPer100gGrams;
   final Value<double?> defaultServingGrams;
   final Value<String?> defaultServingLabel;
+  final Value<double?> fiberPer100gGrams;
+  final Value<double?> sugarPer100gGrams;
+  final Value<double?> sodiumPer100gMg;
   final Value<FoodSource> source;
   final Value<bool> isVerified;
   final Value<DateTime> createdAt;
@@ -635,6 +779,9 @@ class LocalFoodsCompanion extends UpdateCompanion<LocalFood> {
     this.fatPer100gGrams = const Value.absent(),
     this.defaultServingGrams = const Value.absent(),
     this.defaultServingLabel = const Value.absent(),
+    this.fiberPer100gGrams = const Value.absent(),
+    this.sugarPer100gGrams = const Value.absent(),
+    this.sodiumPer100gMg = const Value.absent(),
     this.source = const Value.absent(),
     this.isVerified = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -651,6 +798,9 @@ class LocalFoodsCompanion extends UpdateCompanion<LocalFood> {
     required double fatPer100gGrams,
     this.defaultServingGrams = const Value.absent(),
     this.defaultServingLabel = const Value.absent(),
+    this.fiberPer100gGrams = const Value.absent(),
+    this.sugarPer100gGrams = const Value.absent(),
+    this.sodiumPer100gMg = const Value.absent(),
     required FoodSource source,
     this.isVerified = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -673,6 +823,9 @@ class LocalFoodsCompanion extends UpdateCompanion<LocalFood> {
     Expression<double>? fatPer100gGrams,
     Expression<double>? defaultServingGrams,
     Expression<String>? defaultServingLabel,
+    Expression<double>? fiberPer100gGrams,
+    Expression<double>? sugarPer100gGrams,
+    Expression<double>? sodiumPer100gMg,
     Expression<String>? source,
     Expression<bool>? isVerified,
     Expression<DateTime>? createdAt,
@@ -692,6 +845,9 @@ class LocalFoodsCompanion extends UpdateCompanion<LocalFood> {
         'default_serving_grams': defaultServingGrams,
       if (defaultServingLabel != null)
         'default_serving_label': defaultServingLabel,
+      if (fiberPer100gGrams != null) 'fiber_per100g_grams': fiberPer100gGrams,
+      if (sugarPer100gGrams != null) 'sugar_per100g_grams': sugarPer100gGrams,
+      if (sodiumPer100gMg != null) 'sodium_per100g_mg': sodiumPer100gMg,
       if (source != null) 'source': source,
       if (isVerified != null) 'is_verified': isVerified,
       if (createdAt != null) 'created_at': createdAt,
@@ -710,6 +866,9 @@ class LocalFoodsCompanion extends UpdateCompanion<LocalFood> {
     Value<double>? fatPer100gGrams,
     Value<double?>? defaultServingGrams,
     Value<String?>? defaultServingLabel,
+    Value<double?>? fiberPer100gGrams,
+    Value<double?>? sugarPer100gGrams,
+    Value<double?>? sodiumPer100gMg,
     Value<FoodSource>? source,
     Value<bool>? isVerified,
     Value<DateTime>? createdAt,
@@ -726,6 +885,9 @@ class LocalFoodsCompanion extends UpdateCompanion<LocalFood> {
       fatPer100gGrams: fatPer100gGrams ?? this.fatPer100gGrams,
       defaultServingGrams: defaultServingGrams ?? this.defaultServingGrams,
       defaultServingLabel: defaultServingLabel ?? this.defaultServingLabel,
+      fiberPer100gGrams: fiberPer100gGrams ?? this.fiberPer100gGrams,
+      sugarPer100gGrams: sugarPer100gGrams ?? this.sugarPer100gGrams,
+      sodiumPer100gMg: sodiumPer100gMg ?? this.sodiumPer100gMg,
       source: source ?? this.source,
       isVerified: isVerified ?? this.isVerified,
       createdAt: createdAt ?? this.createdAt,
@@ -772,6 +934,15 @@ class LocalFoodsCompanion extends UpdateCompanion<LocalFood> {
         defaultServingLabel.value,
       );
     }
+    if (fiberPer100gGrams.present) {
+      map['fiber_per100g_grams'] = Variable<double>(fiberPer100gGrams.value);
+    }
+    if (sugarPer100gGrams.present) {
+      map['sugar_per100g_grams'] = Variable<double>(sugarPer100gGrams.value);
+    }
+    if (sodiumPer100gMg.present) {
+      map['sodium_per100g_mg'] = Variable<double>(sodiumPer100gMg.value);
+    }
     if (source.present) {
       map['source'] = Variable<String>(
         $LocalFoodsTable.$convertersource.toSql(source.value),
@@ -802,6 +973,9 @@ class LocalFoodsCompanion extends UpdateCompanion<LocalFood> {
           ..write('fatPer100gGrams: $fatPer100gGrams, ')
           ..write('defaultServingGrams: $defaultServingGrams, ')
           ..write('defaultServingLabel: $defaultServingLabel, ')
+          ..write('fiberPer100gGrams: $fiberPer100gGrams, ')
+          ..write('sugarPer100gGrams: $sugarPer100gGrams, ')
+          ..write('sodiumPer100gMg: $sodiumPer100gMg, ')
           ..write('source: $source, ')
           ..write('isVerified: $isVerified, ')
           ..write('createdAt: $createdAt, ')
@@ -1655,6 +1829,39 @@ class $LogEntriesTable extends LogEntries
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _fiberGramsMeta = const VerificationMeta(
+    'fiberGrams',
+  );
+  @override
+  late final GeneratedColumn<double> fiberGrams = GeneratedColumn<double>(
+    'fiber_grams',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _sugarGramsMeta = const VerificationMeta(
+    'sugarGrams',
+  );
+  @override
+  late final GeneratedColumn<double> sugarGrams = GeneratedColumn<double>(
+    'sugar_grams',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _sodiumMgMeta = const VerificationMeta(
+    'sodiumMg',
+  );
+  @override
+  late final GeneratedColumn<double> sodiumMg = GeneratedColumn<double>(
+    'sodium_mg',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
   @override
   late final GeneratedColumnWithTypeConverter<LogMethod, String> method =
       GeneratedColumn<String>(
@@ -1702,6 +1909,9 @@ class $LogEntriesTable extends LogEntries
     carbsGrams,
     fatGrams,
     quantityLabel,
+    fiberGrams,
+    sugarGrams,
+    sodiumMg,
     method,
     sourceFoodId,
     sourceRecipeId,
@@ -1788,6 +1998,24 @@ class $LogEntriesTable extends LogEntries
     } else if (isInserting) {
       context.missing(_quantityLabelMeta);
     }
+    if (data.containsKey('fiber_grams')) {
+      context.handle(
+        _fiberGramsMeta,
+        fiberGrams.isAcceptableOrUnknown(data['fiber_grams']!, _fiberGramsMeta),
+      );
+    }
+    if (data.containsKey('sugar_grams')) {
+      context.handle(
+        _sugarGramsMeta,
+        sugarGrams.isAcceptableOrUnknown(data['sugar_grams']!, _sugarGramsMeta),
+      );
+    }
+    if (data.containsKey('sodium_mg')) {
+      context.handle(
+        _sodiumMgMeta,
+        sodiumMg.isAcceptableOrUnknown(data['sodium_mg']!, _sodiumMgMeta),
+      );
+    }
     if (data.containsKey('source_food_id')) {
       context.handle(
         _sourceFoodIdMeta,
@@ -1847,6 +2075,18 @@ class $LogEntriesTable extends LogEntries
         DriftSqlType.string,
         data['${effectivePrefix}quantity_label'],
       )!,
+      fiberGrams: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}fiber_grams'],
+      ),
+      sugarGrams: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}sugar_grams'],
+      ),
+      sodiumMg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}sodium_mg'],
+      ),
       method: $LogEntriesTable.$convertermethod.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
@@ -1882,6 +2122,9 @@ class LogEntry extends DataClass implements Insertable<LogEntry> {
   final double carbsGrams;
   final double fatGrams;
   final String quantityLabel;
+  final double? fiberGrams;
+  final double? sugarGrams;
+  final double? sodiumMg;
   final LogMethod method;
   final String? sourceFoodId;
   final String? sourceRecipeId;
@@ -1894,6 +2137,9 @@ class LogEntry extends DataClass implements Insertable<LogEntry> {
     required this.carbsGrams,
     required this.fatGrams,
     required this.quantityLabel,
+    this.fiberGrams,
+    this.sugarGrams,
+    this.sodiumMg,
     required this.method,
     this.sourceFoodId,
     this.sourceRecipeId,
@@ -1909,6 +2155,15 @@ class LogEntry extends DataClass implements Insertable<LogEntry> {
     map['carbs_grams'] = Variable<double>(carbsGrams);
     map['fat_grams'] = Variable<double>(fatGrams);
     map['quantity_label'] = Variable<String>(quantityLabel);
+    if (!nullToAbsent || fiberGrams != null) {
+      map['fiber_grams'] = Variable<double>(fiberGrams);
+    }
+    if (!nullToAbsent || sugarGrams != null) {
+      map['sugar_grams'] = Variable<double>(sugarGrams);
+    }
+    if (!nullToAbsent || sodiumMg != null) {
+      map['sodium_mg'] = Variable<double>(sodiumMg);
+    }
     {
       map['method'] = Variable<String>(
         $LogEntriesTable.$convertermethod.toSql(method),
@@ -1933,6 +2188,15 @@ class LogEntry extends DataClass implements Insertable<LogEntry> {
       carbsGrams: Value(carbsGrams),
       fatGrams: Value(fatGrams),
       quantityLabel: Value(quantityLabel),
+      fiberGrams: fiberGrams == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fiberGrams),
+      sugarGrams: sugarGrams == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sugarGrams),
+      sodiumMg: sodiumMg == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sodiumMg),
       method: Value(method),
       sourceFoodId: sourceFoodId == null && nullToAbsent
           ? const Value.absent()
@@ -1957,6 +2221,9 @@ class LogEntry extends DataClass implements Insertable<LogEntry> {
       carbsGrams: serializer.fromJson<double>(json['carbsGrams']),
       fatGrams: serializer.fromJson<double>(json['fatGrams']),
       quantityLabel: serializer.fromJson<String>(json['quantityLabel']),
+      fiberGrams: serializer.fromJson<double?>(json['fiberGrams']),
+      sugarGrams: serializer.fromJson<double?>(json['sugarGrams']),
+      sodiumMg: serializer.fromJson<double?>(json['sodiumMg']),
       method: $LogEntriesTable.$convertermethod.fromJson(
         serializer.fromJson<String>(json['method']),
       ),
@@ -1976,6 +2243,9 @@ class LogEntry extends DataClass implements Insertable<LogEntry> {
       'carbsGrams': serializer.toJson<double>(carbsGrams),
       'fatGrams': serializer.toJson<double>(fatGrams),
       'quantityLabel': serializer.toJson<String>(quantityLabel),
+      'fiberGrams': serializer.toJson<double?>(fiberGrams),
+      'sugarGrams': serializer.toJson<double?>(sugarGrams),
+      'sodiumMg': serializer.toJson<double?>(sodiumMg),
       'method': serializer.toJson<String>(
         $LogEntriesTable.$convertermethod.toJson(method),
       ),
@@ -1993,6 +2263,9 @@ class LogEntry extends DataClass implements Insertable<LogEntry> {
     double? carbsGrams,
     double? fatGrams,
     String? quantityLabel,
+    Value<double?> fiberGrams = const Value.absent(),
+    Value<double?> sugarGrams = const Value.absent(),
+    Value<double?> sodiumMg = const Value.absent(),
     LogMethod? method,
     Value<String?> sourceFoodId = const Value.absent(),
     Value<String?> sourceRecipeId = const Value.absent(),
@@ -2005,6 +2278,9 @@ class LogEntry extends DataClass implements Insertable<LogEntry> {
     carbsGrams: carbsGrams ?? this.carbsGrams,
     fatGrams: fatGrams ?? this.fatGrams,
     quantityLabel: quantityLabel ?? this.quantityLabel,
+    fiberGrams: fiberGrams.present ? fiberGrams.value : this.fiberGrams,
+    sugarGrams: sugarGrams.present ? sugarGrams.value : this.sugarGrams,
+    sodiumMg: sodiumMg.present ? sodiumMg.value : this.sodiumMg,
     method: method ?? this.method,
     sourceFoodId: sourceFoodId.present ? sourceFoodId.value : this.sourceFoodId,
     sourceRecipeId: sourceRecipeId.present
@@ -2029,6 +2305,13 @@ class LogEntry extends DataClass implements Insertable<LogEntry> {
       quantityLabel: data.quantityLabel.present
           ? data.quantityLabel.value
           : this.quantityLabel,
+      fiberGrams: data.fiberGrams.present
+          ? data.fiberGrams.value
+          : this.fiberGrams,
+      sugarGrams: data.sugarGrams.present
+          ? data.sugarGrams.value
+          : this.sugarGrams,
+      sodiumMg: data.sodiumMg.present ? data.sodiumMg.value : this.sodiumMg,
       method: data.method.present ? data.method.value : this.method,
       sourceFoodId: data.sourceFoodId.present
           ? data.sourceFoodId.value
@@ -2050,6 +2333,9 @@ class LogEntry extends DataClass implements Insertable<LogEntry> {
           ..write('carbsGrams: $carbsGrams, ')
           ..write('fatGrams: $fatGrams, ')
           ..write('quantityLabel: $quantityLabel, ')
+          ..write('fiberGrams: $fiberGrams, ')
+          ..write('sugarGrams: $sugarGrams, ')
+          ..write('sodiumMg: $sodiumMg, ')
           ..write('method: $method, ')
           ..write('sourceFoodId: $sourceFoodId, ')
           ..write('sourceRecipeId: $sourceRecipeId')
@@ -2067,6 +2353,9 @@ class LogEntry extends DataClass implements Insertable<LogEntry> {
     carbsGrams,
     fatGrams,
     quantityLabel,
+    fiberGrams,
+    sugarGrams,
+    sodiumMg,
     method,
     sourceFoodId,
     sourceRecipeId,
@@ -2083,6 +2372,9 @@ class LogEntry extends DataClass implements Insertable<LogEntry> {
           other.carbsGrams == this.carbsGrams &&
           other.fatGrams == this.fatGrams &&
           other.quantityLabel == this.quantityLabel &&
+          other.fiberGrams == this.fiberGrams &&
+          other.sugarGrams == this.sugarGrams &&
+          other.sodiumMg == this.sodiumMg &&
           other.method == this.method &&
           other.sourceFoodId == this.sourceFoodId &&
           other.sourceRecipeId == this.sourceRecipeId);
@@ -2097,6 +2389,9 @@ class LogEntriesCompanion extends UpdateCompanion<LogEntry> {
   final Value<double> carbsGrams;
   final Value<double> fatGrams;
   final Value<String> quantityLabel;
+  final Value<double?> fiberGrams;
+  final Value<double?> sugarGrams;
+  final Value<double?> sodiumMg;
   final Value<LogMethod> method;
   final Value<String?> sourceFoodId;
   final Value<String?> sourceRecipeId;
@@ -2110,6 +2405,9 @@ class LogEntriesCompanion extends UpdateCompanion<LogEntry> {
     this.carbsGrams = const Value.absent(),
     this.fatGrams = const Value.absent(),
     this.quantityLabel = const Value.absent(),
+    this.fiberGrams = const Value.absent(),
+    this.sugarGrams = const Value.absent(),
+    this.sodiumMg = const Value.absent(),
     this.method = const Value.absent(),
     this.sourceFoodId = const Value.absent(),
     this.sourceRecipeId = const Value.absent(),
@@ -2124,6 +2422,9 @@ class LogEntriesCompanion extends UpdateCompanion<LogEntry> {
     required double carbsGrams,
     required double fatGrams,
     required String quantityLabel,
+    this.fiberGrams = const Value.absent(),
+    this.sugarGrams = const Value.absent(),
+    this.sodiumMg = const Value.absent(),
     required LogMethod method,
     this.sourceFoodId = const Value.absent(),
     this.sourceRecipeId = const Value.absent(),
@@ -2146,6 +2447,9 @@ class LogEntriesCompanion extends UpdateCompanion<LogEntry> {
     Expression<double>? carbsGrams,
     Expression<double>? fatGrams,
     Expression<String>? quantityLabel,
+    Expression<double>? fiberGrams,
+    Expression<double>? sugarGrams,
+    Expression<double>? sodiumMg,
     Expression<String>? method,
     Expression<String>? sourceFoodId,
     Expression<String>? sourceRecipeId,
@@ -2160,6 +2464,9 @@ class LogEntriesCompanion extends UpdateCompanion<LogEntry> {
       if (carbsGrams != null) 'carbs_grams': carbsGrams,
       if (fatGrams != null) 'fat_grams': fatGrams,
       if (quantityLabel != null) 'quantity_label': quantityLabel,
+      if (fiberGrams != null) 'fiber_grams': fiberGrams,
+      if (sugarGrams != null) 'sugar_grams': sugarGrams,
+      if (sodiumMg != null) 'sodium_mg': sodiumMg,
       if (method != null) 'method': method,
       if (sourceFoodId != null) 'source_food_id': sourceFoodId,
       if (sourceRecipeId != null) 'source_recipe_id': sourceRecipeId,
@@ -2176,6 +2483,9 @@ class LogEntriesCompanion extends UpdateCompanion<LogEntry> {
     Value<double>? carbsGrams,
     Value<double>? fatGrams,
     Value<String>? quantityLabel,
+    Value<double?>? fiberGrams,
+    Value<double?>? sugarGrams,
+    Value<double?>? sodiumMg,
     Value<LogMethod>? method,
     Value<String?>? sourceFoodId,
     Value<String?>? sourceRecipeId,
@@ -2190,6 +2500,9 @@ class LogEntriesCompanion extends UpdateCompanion<LogEntry> {
       carbsGrams: carbsGrams ?? this.carbsGrams,
       fatGrams: fatGrams ?? this.fatGrams,
       quantityLabel: quantityLabel ?? this.quantityLabel,
+      fiberGrams: fiberGrams ?? this.fiberGrams,
+      sugarGrams: sugarGrams ?? this.sugarGrams,
+      sodiumMg: sodiumMg ?? this.sodiumMg,
       method: method ?? this.method,
       sourceFoodId: sourceFoodId ?? this.sourceFoodId,
       sourceRecipeId: sourceRecipeId ?? this.sourceRecipeId,
@@ -2224,6 +2537,15 @@ class LogEntriesCompanion extends UpdateCompanion<LogEntry> {
     if (quantityLabel.present) {
       map['quantity_label'] = Variable<String>(quantityLabel.value);
     }
+    if (fiberGrams.present) {
+      map['fiber_grams'] = Variable<double>(fiberGrams.value);
+    }
+    if (sugarGrams.present) {
+      map['sugar_grams'] = Variable<double>(sugarGrams.value);
+    }
+    if (sodiumMg.present) {
+      map['sodium_mg'] = Variable<double>(sodiumMg.value);
+    }
     if (method.present) {
       map['method'] = Variable<String>(
         $LogEntriesTable.$convertermethod.toSql(method.value),
@@ -2252,6 +2574,9 @@ class LogEntriesCompanion extends UpdateCompanion<LogEntry> {
           ..write('carbsGrams: $carbsGrams, ')
           ..write('fatGrams: $fatGrams, ')
           ..write('quantityLabel: $quantityLabel, ')
+          ..write('fiberGrams: $fiberGrams, ')
+          ..write('sugarGrams: $sugarGrams, ')
+          ..write('sodiumMg: $sodiumMg, ')
           ..write('method: $method, ')
           ..write('sourceFoodId: $sourceFoodId, ')
           ..write('sourceRecipeId: $sourceRecipeId, ')
@@ -4545,6 +4870,1641 @@ class DayOverridesCompanion extends UpdateCompanion<DayOverride> {
   }
 }
 
+class $BodyMeasurementsTable extends BodyMeasurements
+    with TableInfo<$BodyMeasurementsTable, BodyMeasurement> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BodyMeasurementsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _waistCmMeta = const VerificationMeta(
+    'waistCm',
+  );
+  @override
+  late final GeneratedColumn<double> waistCm = GeneratedColumn<double>(
+    'waist_cm',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _chestCmMeta = const VerificationMeta(
+    'chestCm',
+  );
+  @override
+  late final GeneratedColumn<double> chestCm = GeneratedColumn<double>(
+    'chest_cm',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _hipsCmMeta = const VerificationMeta('hipsCm');
+  @override
+  late final GeneratedColumn<double> hipsCm = GeneratedColumn<double>(
+    'hips_cm',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _armCmMeta = const VerificationMeta('armCm');
+  @override
+  late final GeneratedColumn<double> armCm = GeneratedColumn<double>(
+    'arm_cm',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _thighCmMeta = const VerificationMeta(
+    'thighCm',
+  );
+  @override
+  late final GeneratedColumn<double> thighCm = GeneratedColumn<double>(
+    'thigh_cm',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    date,
+    waistCm,
+    chestCm,
+    hipsCm,
+    armCm,
+    thighCm,
+    notes,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'body_measurements';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<BodyMeasurement> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('waist_cm')) {
+      context.handle(
+        _waistCmMeta,
+        waistCm.isAcceptableOrUnknown(data['waist_cm']!, _waistCmMeta),
+      );
+    }
+    if (data.containsKey('chest_cm')) {
+      context.handle(
+        _chestCmMeta,
+        chestCm.isAcceptableOrUnknown(data['chest_cm']!, _chestCmMeta),
+      );
+    }
+    if (data.containsKey('hips_cm')) {
+      context.handle(
+        _hipsCmMeta,
+        hipsCm.isAcceptableOrUnknown(data['hips_cm']!, _hipsCmMeta),
+      );
+    }
+    if (data.containsKey('arm_cm')) {
+      context.handle(
+        _armCmMeta,
+        armCm.isAcceptableOrUnknown(data['arm_cm']!, _armCmMeta),
+      );
+    }
+    if (data.containsKey('thigh_cm')) {
+      context.handle(
+        _thighCmMeta,
+        thighCm.isAcceptableOrUnknown(data['thigh_cm']!, _thighCmMeta),
+      );
+    }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  BodyMeasurement map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return BodyMeasurement(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date'],
+      )!,
+      waistCm: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}waist_cm'],
+      ),
+      chestCm: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}chest_cm'],
+      ),
+      hipsCm: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}hips_cm'],
+      ),
+      armCm: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}arm_cm'],
+      ),
+      thighCm: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}thigh_cm'],
+      ),
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
+    );
+  }
+
+  @override
+  $BodyMeasurementsTable createAlias(String alias) {
+    return $BodyMeasurementsTable(attachedDatabase, alias);
+  }
+}
+
+class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
+  final String id;
+  final DateTime date;
+  final double? waistCm;
+  final double? chestCm;
+  final double? hipsCm;
+  final double? armCm;
+  final double? thighCm;
+  final String? notes;
+  const BodyMeasurement({
+    required this.id,
+    required this.date,
+    this.waistCm,
+    this.chestCm,
+    this.hipsCm,
+    this.armCm,
+    this.thighCm,
+    this.notes,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['date'] = Variable<DateTime>(date);
+    if (!nullToAbsent || waistCm != null) {
+      map['waist_cm'] = Variable<double>(waistCm);
+    }
+    if (!nullToAbsent || chestCm != null) {
+      map['chest_cm'] = Variable<double>(chestCm);
+    }
+    if (!nullToAbsent || hipsCm != null) {
+      map['hips_cm'] = Variable<double>(hipsCm);
+    }
+    if (!nullToAbsent || armCm != null) {
+      map['arm_cm'] = Variable<double>(armCm);
+    }
+    if (!nullToAbsent || thighCm != null) {
+      map['thigh_cm'] = Variable<double>(thighCm);
+    }
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
+    return map;
+  }
+
+  BodyMeasurementsCompanion toCompanion(bool nullToAbsent) {
+    return BodyMeasurementsCompanion(
+      id: Value(id),
+      date: Value(date),
+      waistCm: waistCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(waistCm),
+      chestCm: chestCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(chestCm),
+      hipsCm: hipsCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hipsCm),
+      armCm: armCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(armCm),
+      thighCm: thighCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(thighCm),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
+    );
+  }
+
+  factory BodyMeasurement.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return BodyMeasurement(
+      id: serializer.fromJson<String>(json['id']),
+      date: serializer.fromJson<DateTime>(json['date']),
+      waistCm: serializer.fromJson<double?>(json['waistCm']),
+      chestCm: serializer.fromJson<double?>(json['chestCm']),
+      hipsCm: serializer.fromJson<double?>(json['hipsCm']),
+      armCm: serializer.fromJson<double?>(json['armCm']),
+      thighCm: serializer.fromJson<double?>(json['thighCm']),
+      notes: serializer.fromJson<String?>(json['notes']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'date': serializer.toJson<DateTime>(date),
+      'waistCm': serializer.toJson<double?>(waistCm),
+      'chestCm': serializer.toJson<double?>(chestCm),
+      'hipsCm': serializer.toJson<double?>(hipsCm),
+      'armCm': serializer.toJson<double?>(armCm),
+      'thighCm': serializer.toJson<double?>(thighCm),
+      'notes': serializer.toJson<String?>(notes),
+    };
+  }
+
+  BodyMeasurement copyWith({
+    String? id,
+    DateTime? date,
+    Value<double?> waistCm = const Value.absent(),
+    Value<double?> chestCm = const Value.absent(),
+    Value<double?> hipsCm = const Value.absent(),
+    Value<double?> armCm = const Value.absent(),
+    Value<double?> thighCm = const Value.absent(),
+    Value<String?> notes = const Value.absent(),
+  }) => BodyMeasurement(
+    id: id ?? this.id,
+    date: date ?? this.date,
+    waistCm: waistCm.present ? waistCm.value : this.waistCm,
+    chestCm: chestCm.present ? chestCm.value : this.chestCm,
+    hipsCm: hipsCm.present ? hipsCm.value : this.hipsCm,
+    armCm: armCm.present ? armCm.value : this.armCm,
+    thighCm: thighCm.present ? thighCm.value : this.thighCm,
+    notes: notes.present ? notes.value : this.notes,
+  );
+  BodyMeasurement copyWithCompanion(BodyMeasurementsCompanion data) {
+    return BodyMeasurement(
+      id: data.id.present ? data.id.value : this.id,
+      date: data.date.present ? data.date.value : this.date,
+      waistCm: data.waistCm.present ? data.waistCm.value : this.waistCm,
+      chestCm: data.chestCm.present ? data.chestCm.value : this.chestCm,
+      hipsCm: data.hipsCm.present ? data.hipsCm.value : this.hipsCm,
+      armCm: data.armCm.present ? data.armCm.value : this.armCm,
+      thighCm: data.thighCm.present ? data.thighCm.value : this.thighCm,
+      notes: data.notes.present ? data.notes.value : this.notes,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BodyMeasurement(')
+          ..write('id: $id, ')
+          ..write('date: $date, ')
+          ..write('waistCm: $waistCm, ')
+          ..write('chestCm: $chestCm, ')
+          ..write('hipsCm: $hipsCm, ')
+          ..write('armCm: $armCm, ')
+          ..write('thighCm: $thighCm, ')
+          ..write('notes: $notes')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, date, waistCm, chestCm, hipsCm, armCm, thighCm, notes);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is BodyMeasurement &&
+          other.id == this.id &&
+          other.date == this.date &&
+          other.waistCm == this.waistCm &&
+          other.chestCm == this.chestCm &&
+          other.hipsCm == this.hipsCm &&
+          other.armCm == this.armCm &&
+          other.thighCm == this.thighCm &&
+          other.notes == this.notes);
+}
+
+class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
+  final Value<String> id;
+  final Value<DateTime> date;
+  final Value<double?> waistCm;
+  final Value<double?> chestCm;
+  final Value<double?> hipsCm;
+  final Value<double?> armCm;
+  final Value<double?> thighCm;
+  final Value<String?> notes;
+  final Value<int> rowid;
+  const BodyMeasurementsCompanion({
+    this.id = const Value.absent(),
+    this.date = const Value.absent(),
+    this.waistCm = const Value.absent(),
+    this.chestCm = const Value.absent(),
+    this.hipsCm = const Value.absent(),
+    this.armCm = const Value.absent(),
+    this.thighCm = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  BodyMeasurementsCompanion.insert({
+    required String id,
+    required DateTime date,
+    this.waistCm = const Value.absent(),
+    this.chestCm = const Value.absent(),
+    this.hipsCm = const Value.absent(),
+    this.armCm = const Value.absent(),
+    this.thighCm = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       date = Value(date);
+  static Insertable<BodyMeasurement> custom({
+    Expression<String>? id,
+    Expression<DateTime>? date,
+    Expression<double>? waistCm,
+    Expression<double>? chestCm,
+    Expression<double>? hipsCm,
+    Expression<double>? armCm,
+    Expression<double>? thighCm,
+    Expression<String>? notes,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (date != null) 'date': date,
+      if (waistCm != null) 'waist_cm': waistCm,
+      if (chestCm != null) 'chest_cm': chestCm,
+      if (hipsCm != null) 'hips_cm': hipsCm,
+      if (armCm != null) 'arm_cm': armCm,
+      if (thighCm != null) 'thigh_cm': thighCm,
+      if (notes != null) 'notes': notes,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  BodyMeasurementsCompanion copyWith({
+    Value<String>? id,
+    Value<DateTime>? date,
+    Value<double?>? waistCm,
+    Value<double?>? chestCm,
+    Value<double?>? hipsCm,
+    Value<double?>? armCm,
+    Value<double?>? thighCm,
+    Value<String?>? notes,
+    Value<int>? rowid,
+  }) {
+    return BodyMeasurementsCompanion(
+      id: id ?? this.id,
+      date: date ?? this.date,
+      waistCm: waistCm ?? this.waistCm,
+      chestCm: chestCm ?? this.chestCm,
+      hipsCm: hipsCm ?? this.hipsCm,
+      armCm: armCm ?? this.armCm,
+      thighCm: thighCm ?? this.thighCm,
+      notes: notes ?? this.notes,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (waistCm.present) {
+      map['waist_cm'] = Variable<double>(waistCm.value);
+    }
+    if (chestCm.present) {
+      map['chest_cm'] = Variable<double>(chestCm.value);
+    }
+    if (hipsCm.present) {
+      map['hips_cm'] = Variable<double>(hipsCm.value);
+    }
+    if (armCm.present) {
+      map['arm_cm'] = Variable<double>(armCm.value);
+    }
+    if (thighCm.present) {
+      map['thigh_cm'] = Variable<double>(thighCm.value);
+    }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BodyMeasurementsCompanion(')
+          ..write('id: $id, ')
+          ..write('date: $date, ')
+          ..write('waistCm: $waistCm, ')
+          ..write('chestCm: $chestCm, ')
+          ..write('hipsCm: $hipsCm, ')
+          ..write('armCm: $armCm, ')
+          ..write('thighCm: $thighCm, ')
+          ..write('notes: $notes, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ProgressPhotosTable extends ProgressPhotos
+    with TableInfo<$ProgressPhotosTable, ProgressPhoto> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ProgressPhotosTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _filePathMeta = const VerificationMeta(
+    'filePath',
+  );
+  @override
+  late final GeneratedColumn<String> filePath = GeneratedColumn<String>(
+    'file_path',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, date, filePath, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'progress_photos';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ProgressPhoto> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('file_path')) {
+      context.handle(
+        _filePathMeta,
+        filePath.isAcceptableOrUnknown(data['file_path']!, _filePathMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_filePathMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ProgressPhoto map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ProgressPhoto(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date'],
+      )!,
+      filePath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}file_path'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $ProgressPhotosTable createAlias(String alias) {
+    return $ProgressPhotosTable(attachedDatabase, alias);
+  }
+}
+
+class ProgressPhoto extends DataClass implements Insertable<ProgressPhoto> {
+  final String id;
+  final DateTime date;
+  final String filePath;
+  final DateTime createdAt;
+  const ProgressPhoto({
+    required this.id,
+    required this.date,
+    required this.filePath,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['date'] = Variable<DateTime>(date);
+    map['file_path'] = Variable<String>(filePath);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  ProgressPhotosCompanion toCompanion(bool nullToAbsent) {
+    return ProgressPhotosCompanion(
+      id: Value(id),
+      date: Value(date),
+      filePath: Value(filePath),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory ProgressPhoto.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ProgressPhoto(
+      id: serializer.fromJson<String>(json['id']),
+      date: serializer.fromJson<DateTime>(json['date']),
+      filePath: serializer.fromJson<String>(json['filePath']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'date': serializer.toJson<DateTime>(date),
+      'filePath': serializer.toJson<String>(filePath),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  ProgressPhoto copyWith({
+    String? id,
+    DateTime? date,
+    String? filePath,
+    DateTime? createdAt,
+  }) => ProgressPhoto(
+    id: id ?? this.id,
+    date: date ?? this.date,
+    filePath: filePath ?? this.filePath,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  ProgressPhoto copyWithCompanion(ProgressPhotosCompanion data) {
+    return ProgressPhoto(
+      id: data.id.present ? data.id.value : this.id,
+      date: data.date.present ? data.date.value : this.date,
+      filePath: data.filePath.present ? data.filePath.value : this.filePath,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProgressPhoto(')
+          ..write('id: $id, ')
+          ..write('date: $date, ')
+          ..write('filePath: $filePath, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, date, filePath, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ProgressPhoto &&
+          other.id == this.id &&
+          other.date == this.date &&
+          other.filePath == this.filePath &&
+          other.createdAt == this.createdAt);
+}
+
+class ProgressPhotosCompanion extends UpdateCompanion<ProgressPhoto> {
+  final Value<String> id;
+  final Value<DateTime> date;
+  final Value<String> filePath;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const ProgressPhotosCompanion({
+    this.id = const Value.absent(),
+    this.date = const Value.absent(),
+    this.filePath = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ProgressPhotosCompanion.insert({
+    required String id,
+    required DateTime date,
+    required String filePath,
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       date = Value(date),
+       filePath = Value(filePath);
+  static Insertable<ProgressPhoto> custom({
+    Expression<String>? id,
+    Expression<DateTime>? date,
+    Expression<String>? filePath,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (date != null) 'date': date,
+      if (filePath != null) 'file_path': filePath,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ProgressPhotosCompanion copyWith({
+    Value<String>? id,
+    Value<DateTime>? date,
+    Value<String>? filePath,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return ProgressPhotosCompanion(
+      id: id ?? this.id,
+      date: date ?? this.date,
+      filePath: filePath ?? this.filePath,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (filePath.present) {
+      map['file_path'] = Variable<String>(filePath.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProgressPhotosCompanion(')
+          ..write('id: $id, ')
+          ..write('date: $date, ')
+          ..write('filePath: $filePath, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $HabitsTable extends Habits with TableInfo<$HabitsTable, Habit> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $HabitsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _archivedMeta = const VerificationMeta(
+    'archived',
+  );
+  @override
+  late final GeneratedColumn<bool> archived = GeneratedColumn<bool>(
+    'archived',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("archived" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, name, archived, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'habits';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Habit> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('archived')) {
+      context.handle(
+        _archivedMeta,
+        archived.isAcceptableOrUnknown(data['archived']!, _archivedMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Habit map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Habit(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      archived: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}archived'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $HabitsTable createAlias(String alias) {
+    return $HabitsTable(attachedDatabase, alias);
+  }
+}
+
+class Habit extends DataClass implements Insertable<Habit> {
+  final String id;
+  final String name;
+  final bool archived;
+  final DateTime createdAt;
+  const Habit({
+    required this.id,
+    required this.name,
+    required this.archived,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    map['archived'] = Variable<bool>(archived);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  HabitsCompanion toCompanion(bool nullToAbsent) {
+    return HabitsCompanion(
+      id: Value(id),
+      name: Value(name),
+      archived: Value(archived),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory Habit.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Habit(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      archived: serializer.fromJson<bool>(json['archived']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'archived': serializer.toJson<bool>(archived),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  Habit copyWith({
+    String? id,
+    String? name,
+    bool? archived,
+    DateTime? createdAt,
+  }) => Habit(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    archived: archived ?? this.archived,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  Habit copyWithCompanion(HabitsCompanion data) {
+    return Habit(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      archived: data.archived.present ? data.archived.value : this.archived,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Habit(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('archived: $archived, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, archived, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Habit &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.archived == this.archived &&
+          other.createdAt == this.createdAt);
+}
+
+class HabitsCompanion extends UpdateCompanion<Habit> {
+  final Value<String> id;
+  final Value<String> name;
+  final Value<bool> archived;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const HabitsCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.archived = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  HabitsCompanion.insert({
+    required String id,
+    required String name,
+    this.archived = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       name = Value(name);
+  static Insertable<Habit> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<bool>? archived,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (archived != null) 'archived': archived,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  HabitsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? name,
+    Value<bool>? archived,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return HabitsCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      archived: archived ?? this.archived,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (archived.present) {
+      map['archived'] = Variable<bool>(archived.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('HabitsCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('archived: $archived, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $HabitCompletionsTable extends HabitCompletions
+    with TableInfo<$HabitCompletionsTable, HabitCompletion> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $HabitCompletionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _habitIdMeta = const VerificationMeta(
+    'habitId',
+  );
+  @override
+  late final GeneratedColumn<String> habitId = GeneratedColumn<String>(
+    'habit_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES habits (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, habitId, date];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'habit_completions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<HabitCompletion> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('habit_id')) {
+      context.handle(
+        _habitIdMeta,
+        habitId.isAcceptableOrUnknown(data['habit_id']!, _habitIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_habitIdMeta);
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  HabitCompletion map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return HabitCompletion(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      habitId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}habit_id'],
+      )!,
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date'],
+      )!,
+    );
+  }
+
+  @override
+  $HabitCompletionsTable createAlias(String alias) {
+    return $HabitCompletionsTable(attachedDatabase, alias);
+  }
+}
+
+class HabitCompletion extends DataClass implements Insertable<HabitCompletion> {
+  final String id;
+  final String habitId;
+  final DateTime date;
+  const HabitCompletion({
+    required this.id,
+    required this.habitId,
+    required this.date,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['habit_id'] = Variable<String>(habitId);
+    map['date'] = Variable<DateTime>(date);
+    return map;
+  }
+
+  HabitCompletionsCompanion toCompanion(bool nullToAbsent) {
+    return HabitCompletionsCompanion(
+      id: Value(id),
+      habitId: Value(habitId),
+      date: Value(date),
+    );
+  }
+
+  factory HabitCompletion.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return HabitCompletion(
+      id: serializer.fromJson<String>(json['id']),
+      habitId: serializer.fromJson<String>(json['habitId']),
+      date: serializer.fromJson<DateTime>(json['date']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'habitId': serializer.toJson<String>(habitId),
+      'date': serializer.toJson<DateTime>(date),
+    };
+  }
+
+  HabitCompletion copyWith({String? id, String? habitId, DateTime? date}) =>
+      HabitCompletion(
+        id: id ?? this.id,
+        habitId: habitId ?? this.habitId,
+        date: date ?? this.date,
+      );
+  HabitCompletion copyWithCompanion(HabitCompletionsCompanion data) {
+    return HabitCompletion(
+      id: data.id.present ? data.id.value : this.id,
+      habitId: data.habitId.present ? data.habitId.value : this.habitId,
+      date: data.date.present ? data.date.value : this.date,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('HabitCompletion(')
+          ..write('id: $id, ')
+          ..write('habitId: $habitId, ')
+          ..write('date: $date')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, habitId, date);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is HabitCompletion &&
+          other.id == this.id &&
+          other.habitId == this.habitId &&
+          other.date == this.date);
+}
+
+class HabitCompletionsCompanion extends UpdateCompanion<HabitCompletion> {
+  final Value<String> id;
+  final Value<String> habitId;
+  final Value<DateTime> date;
+  final Value<int> rowid;
+  const HabitCompletionsCompanion({
+    this.id = const Value.absent(),
+    this.habitId = const Value.absent(),
+    this.date = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  HabitCompletionsCompanion.insert({
+    required String id,
+    required String habitId,
+    required DateTime date,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       habitId = Value(habitId),
+       date = Value(date);
+  static Insertable<HabitCompletion> custom({
+    Expression<String>? id,
+    Expression<String>? habitId,
+    Expression<DateTime>? date,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (habitId != null) 'habit_id': habitId,
+      if (date != null) 'date': date,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  HabitCompletionsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? habitId,
+    Value<DateTime>? date,
+    Value<int>? rowid,
+  }) {
+    return HabitCompletionsCompanion(
+      id: id ?? this.id,
+      habitId: habitId ?? this.habitId,
+      date: date ?? this.date,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (habitId.present) {
+      map['habit_id'] = Variable<String>(habitId.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('HabitCompletionsCompanion(')
+          ..write('id: $id, ')
+          ..write('habitId: $habitId, ')
+          ..write('date: $date, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CycleEntriesTable extends CycleEntries
+    with TableInfo<$CycleEntriesTable, CycleEntry> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CycleEntriesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _startDateMeta = const VerificationMeta(
+    'startDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
+    'start_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, startDate, notes];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'cycle_entries';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CycleEntry> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(
+        _startDateMeta,
+        startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startDateMeta);
+    }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CycleEntry map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CycleEntry(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      startDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}start_date'],
+      )!,
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
+    );
+  }
+
+  @override
+  $CycleEntriesTable createAlias(String alias) {
+    return $CycleEntriesTable(attachedDatabase, alias);
+  }
+}
+
+class CycleEntry extends DataClass implements Insertable<CycleEntry> {
+  final String id;
+  final DateTime startDate;
+  final String? notes;
+  const CycleEntry({required this.id, required this.startDate, this.notes});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['start_date'] = Variable<DateTime>(startDate);
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
+    return map;
+  }
+
+  CycleEntriesCompanion toCompanion(bool nullToAbsent) {
+    return CycleEntriesCompanion(
+      id: Value(id),
+      startDate: Value(startDate),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
+    );
+  }
+
+  factory CycleEntry.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CycleEntry(
+      id: serializer.fromJson<String>(json['id']),
+      startDate: serializer.fromJson<DateTime>(json['startDate']),
+      notes: serializer.fromJson<String?>(json['notes']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'startDate': serializer.toJson<DateTime>(startDate),
+      'notes': serializer.toJson<String?>(notes),
+    };
+  }
+
+  CycleEntry copyWith({
+    String? id,
+    DateTime? startDate,
+    Value<String?> notes = const Value.absent(),
+  }) => CycleEntry(
+    id: id ?? this.id,
+    startDate: startDate ?? this.startDate,
+    notes: notes.present ? notes.value : this.notes,
+  );
+  CycleEntry copyWithCompanion(CycleEntriesCompanion data) {
+    return CycleEntry(
+      id: data.id.present ? data.id.value : this.id,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      notes: data.notes.present ? data.notes.value : this.notes,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CycleEntry(')
+          ..write('id: $id, ')
+          ..write('startDate: $startDate, ')
+          ..write('notes: $notes')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, startDate, notes);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CycleEntry &&
+          other.id == this.id &&
+          other.startDate == this.startDate &&
+          other.notes == this.notes);
+}
+
+class CycleEntriesCompanion extends UpdateCompanion<CycleEntry> {
+  final Value<String> id;
+  final Value<DateTime> startDate;
+  final Value<String?> notes;
+  final Value<int> rowid;
+  const CycleEntriesCompanion({
+    this.id = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CycleEntriesCompanion.insert({
+    required String id,
+    required DateTime startDate,
+    this.notes = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       startDate = Value(startDate);
+  static Insertable<CycleEntry> custom({
+    Expression<String>? id,
+    Expression<DateTime>? startDate,
+    Expression<String>? notes,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (startDate != null) 'start_date': startDate,
+      if (notes != null) 'notes': notes,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CycleEntriesCompanion copyWith({
+    Value<String>? id,
+    Value<DateTime>? startDate,
+    Value<String?>? notes,
+    Value<int>? rowid,
+  }) {
+    return CycleEntriesCompanion(
+      id: id ?? this.id,
+      startDate: startDate ?? this.startDate,
+      notes: notes ?? this.notes,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<DateTime>(startDate.value);
+    }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CycleEntriesCompanion(')
+          ..write('id: $id, ')
+          ..write('startDate: $startDate, ')
+          ..write('notes: $notes, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -4557,6 +6517,15 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $TargetsTable targets = $TargetsTable(this);
   late final $CoachingRunsTable coachingRuns = $CoachingRunsTable(this);
   late final $DayOverridesTable dayOverrides = $DayOverridesTable(this);
+  late final $BodyMeasurementsTable bodyMeasurements = $BodyMeasurementsTable(
+    this,
+  );
+  late final $ProgressPhotosTable progressPhotos = $ProgressPhotosTable(this);
+  late final $HabitsTable habits = $HabitsTable(this);
+  late final $HabitCompletionsTable habitCompletions = $HabitCompletionsTable(
+    this,
+  );
+  late final $CycleEntriesTable cycleEntries = $CycleEntriesTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -4570,6 +6539,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     targets,
     coachingRuns,
     dayOverrides,
+    bodyMeasurements,
+    progressPhotos,
+    habits,
+    habitCompletions,
+    cycleEntries,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -4579,6 +6553,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('recipe_ingredients', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'habits',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('habit_completions', kind: UpdateKind.delete)],
     ),
   ]);
 }
@@ -4595,6 +6576,9 @@ typedef $$LocalFoodsTableCreateCompanionBuilder =
       required double fatPer100gGrams,
       Value<double?> defaultServingGrams,
       Value<String?> defaultServingLabel,
+      Value<double?> fiberPer100gGrams,
+      Value<double?> sugarPer100gGrams,
+      Value<double?> sodiumPer100gMg,
       required FoodSource source,
       Value<bool> isVerified,
       Value<DateTime> createdAt,
@@ -4612,6 +6596,9 @@ typedef $$LocalFoodsTableUpdateCompanionBuilder =
       Value<double> fatPer100gGrams,
       Value<double?> defaultServingGrams,
       Value<String?> defaultServingLabel,
+      Value<double?> fiberPer100gGrams,
+      Value<double?> sugarPer100gGrams,
+      Value<double?> sodiumPer100gMg,
       Value<FoodSource> source,
       Value<bool> isVerified,
       Value<DateTime> createdAt,
@@ -4718,6 +6705,21 @@ class $$LocalFoodsTableFilterComposer
 
   ColumnFilters<String> get defaultServingLabel => $composableBuilder(
     column: $table.defaultServingLabel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get fiberPer100gGrams => $composableBuilder(
+    column: $table.fiberPer100gGrams,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get sugarPer100gGrams => $composableBuilder(
+    column: $table.sugarPer100gGrams,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get sodiumPer100gMg => $composableBuilder(
+    column: $table.sodiumPer100gMg,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -4847,6 +6849,21 @@ class $$LocalFoodsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get fiberPer100gGrams => $composableBuilder(
+    column: $table.fiberPer100gGrams,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get sugarPer100gGrams => $composableBuilder(
+    column: $table.sugarPer100gGrams,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get sodiumPer100gMg => $composableBuilder(
+    column: $table.sodiumPer100gMg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get source => $composableBuilder(
     column: $table.source,
     builder: (column) => ColumnOrderings(column),
@@ -4911,6 +6928,21 @@ class $$LocalFoodsTableAnnotationComposer
 
   GeneratedColumn<String> get defaultServingLabel => $composableBuilder(
     column: $table.defaultServingLabel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get fiberPer100gGrams => $composableBuilder(
+    column: $table.fiberPer100gGrams,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get sugarPer100gGrams => $composableBuilder(
+    column: $table.sugarPer100gGrams,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get sodiumPer100gMg => $composableBuilder(
+    column: $table.sodiumPer100gMg,
     builder: (column) => column,
   );
 
@@ -5018,6 +7050,9 @@ class $$LocalFoodsTableTableManager
                 Value<double> fatPer100gGrams = const Value.absent(),
                 Value<double?> defaultServingGrams = const Value.absent(),
                 Value<String?> defaultServingLabel = const Value.absent(),
+                Value<double?> fiberPer100gGrams = const Value.absent(),
+                Value<double?> sugarPer100gGrams = const Value.absent(),
+                Value<double?> sodiumPer100gMg = const Value.absent(),
                 Value<FoodSource> source = const Value.absent(),
                 Value<bool> isVerified = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -5033,6 +7068,9 @@ class $$LocalFoodsTableTableManager
                 fatPer100gGrams: fatPer100gGrams,
                 defaultServingGrams: defaultServingGrams,
                 defaultServingLabel: defaultServingLabel,
+                fiberPer100gGrams: fiberPer100gGrams,
+                sugarPer100gGrams: sugarPer100gGrams,
+                sodiumPer100gMg: sodiumPer100gMg,
                 source: source,
                 isVerified: isVerified,
                 createdAt: createdAt,
@@ -5050,6 +7088,9 @@ class $$LocalFoodsTableTableManager
                 required double fatPer100gGrams,
                 Value<double?> defaultServingGrams = const Value.absent(),
                 Value<String?> defaultServingLabel = const Value.absent(),
+                Value<double?> fiberPer100gGrams = const Value.absent(),
+                Value<double?> sugarPer100gGrams = const Value.absent(),
+                Value<double?> sodiumPer100gMg = const Value.absent(),
                 required FoodSource source,
                 Value<bool> isVerified = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -5065,6 +7106,9 @@ class $$LocalFoodsTableTableManager
                 fatPer100gGrams: fatPer100gGrams,
                 defaultServingGrams: defaultServingGrams,
                 defaultServingLabel: defaultServingLabel,
+                fiberPer100gGrams: fiberPer100gGrams,
+                sugarPer100gGrams: sugarPer100gGrams,
+                sodiumPer100gMg: sodiumPer100gMg,
                 source: source,
                 isVerified: isVerified,
                 createdAt: createdAt,
@@ -6184,6 +8228,9 @@ typedef $$LogEntriesTableCreateCompanionBuilder =
       required double carbsGrams,
       required double fatGrams,
       required String quantityLabel,
+      Value<double?> fiberGrams,
+      Value<double?> sugarGrams,
+      Value<double?> sodiumMg,
       required LogMethod method,
       Value<String?> sourceFoodId,
       Value<String?> sourceRecipeId,
@@ -6199,6 +8246,9 @@ typedef $$LogEntriesTableUpdateCompanionBuilder =
       Value<double> carbsGrams,
       Value<double> fatGrams,
       Value<String> quantityLabel,
+      Value<double?> fiberGrams,
+      Value<double?> sugarGrams,
+      Value<double?> sodiumMg,
       Value<LogMethod> method,
       Value<String?> sourceFoodId,
       Value<String?> sourceRecipeId,
@@ -6290,6 +8340,21 @@ class $$LogEntriesTableFilterComposer
 
   ColumnFilters<String> get quantityLabel => $composableBuilder(
     column: $table.quantityLabel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get fiberGrams => $composableBuilder(
+    column: $table.fiberGrams,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get sugarGrams => $composableBuilder(
+    column: $table.sugarGrams,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get sodiumMg => $composableBuilder(
+    column: $table.sodiumMg,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -6395,6 +8460,21 @@ class $$LogEntriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get fiberGrams => $composableBuilder(
+    column: $table.fiberGrams,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get sugarGrams => $composableBuilder(
+    column: $table.sugarGrams,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get sodiumMg => $composableBuilder(
+    column: $table.sodiumMg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get method => $composableBuilder(
     column: $table.method,
     builder: (column) => ColumnOrderings(column),
@@ -6488,6 +8568,19 @@ class $$LogEntriesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<double> get fiberGrams => $composableBuilder(
+    column: $table.fiberGrams,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get sugarGrams => $composableBuilder(
+    column: $table.sugarGrams,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get sodiumMg =>
+      $composableBuilder(column: $table.sodiumMg, builder: (column) => column);
+
   GeneratedColumnWithTypeConverter<LogMethod, String> get method =>
       $composableBuilder(column: $table.method, builder: (column) => column);
 
@@ -6574,6 +8667,9 @@ class $$LogEntriesTableTableManager
                 Value<double> carbsGrams = const Value.absent(),
                 Value<double> fatGrams = const Value.absent(),
                 Value<String> quantityLabel = const Value.absent(),
+                Value<double?> fiberGrams = const Value.absent(),
+                Value<double?> sugarGrams = const Value.absent(),
+                Value<double?> sodiumMg = const Value.absent(),
                 Value<LogMethod> method = const Value.absent(),
                 Value<String?> sourceFoodId = const Value.absent(),
                 Value<String?> sourceRecipeId = const Value.absent(),
@@ -6587,6 +8683,9 @@ class $$LogEntriesTableTableManager
                 carbsGrams: carbsGrams,
                 fatGrams: fatGrams,
                 quantityLabel: quantityLabel,
+                fiberGrams: fiberGrams,
+                sugarGrams: sugarGrams,
+                sodiumMg: sodiumMg,
                 method: method,
                 sourceFoodId: sourceFoodId,
                 sourceRecipeId: sourceRecipeId,
@@ -6602,6 +8701,9 @@ class $$LogEntriesTableTableManager
                 required double carbsGrams,
                 required double fatGrams,
                 required String quantityLabel,
+                Value<double?> fiberGrams = const Value.absent(),
+                Value<double?> sugarGrams = const Value.absent(),
+                Value<double?> sodiumMg = const Value.absent(),
                 required LogMethod method,
                 Value<String?> sourceFoodId = const Value.absent(),
                 Value<String?> sourceRecipeId = const Value.absent(),
@@ -6615,6 +8717,9 @@ class $$LogEntriesTableTableManager
                 carbsGrams: carbsGrams,
                 fatGrams: fatGrams,
                 quantityLabel: quantityLabel,
+                fiberGrams: fiberGrams,
+                sugarGrams: sugarGrams,
+                sodiumMg: sodiumMg,
                 method: method,
                 sourceFoodId: sourceFoodId,
                 sourceRecipeId: sourceRecipeId,
@@ -8035,6 +10140,1178 @@ typedef $$DayOverridesTableProcessedTableManager =
       DayOverride,
       PrefetchHooks Function()
     >;
+typedef $$BodyMeasurementsTableCreateCompanionBuilder =
+    BodyMeasurementsCompanion Function({
+      required String id,
+      required DateTime date,
+      Value<double?> waistCm,
+      Value<double?> chestCm,
+      Value<double?> hipsCm,
+      Value<double?> armCm,
+      Value<double?> thighCm,
+      Value<String?> notes,
+      Value<int> rowid,
+    });
+typedef $$BodyMeasurementsTableUpdateCompanionBuilder =
+    BodyMeasurementsCompanion Function({
+      Value<String> id,
+      Value<DateTime> date,
+      Value<double?> waistCm,
+      Value<double?> chestCm,
+      Value<double?> hipsCm,
+      Value<double?> armCm,
+      Value<double?> thighCm,
+      Value<String?> notes,
+      Value<int> rowid,
+    });
+
+class $$BodyMeasurementsTableFilterComposer
+    extends Composer<_$AppDatabase, $BodyMeasurementsTable> {
+  $$BodyMeasurementsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get waistCm => $composableBuilder(
+    column: $table.waistCm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get chestCm => $composableBuilder(
+    column: $table.chestCm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get hipsCm => $composableBuilder(
+    column: $table.hipsCm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get armCm => $composableBuilder(
+    column: $table.armCm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get thighCm => $composableBuilder(
+    column: $table.thighCm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$BodyMeasurementsTableOrderingComposer
+    extends Composer<_$AppDatabase, $BodyMeasurementsTable> {
+  $$BodyMeasurementsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get waistCm => $composableBuilder(
+    column: $table.waistCm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get chestCm => $composableBuilder(
+    column: $table.chestCm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get hipsCm => $composableBuilder(
+    column: $table.hipsCm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get armCm => $composableBuilder(
+    column: $table.armCm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get thighCm => $composableBuilder(
+    column: $table.thighCm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$BodyMeasurementsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $BodyMeasurementsTable> {
+  $$BodyMeasurementsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<double> get waistCm =>
+      $composableBuilder(column: $table.waistCm, builder: (column) => column);
+
+  GeneratedColumn<double> get chestCm =>
+      $composableBuilder(column: $table.chestCm, builder: (column) => column);
+
+  GeneratedColumn<double> get hipsCm =>
+      $composableBuilder(column: $table.hipsCm, builder: (column) => column);
+
+  GeneratedColumn<double> get armCm =>
+      $composableBuilder(column: $table.armCm, builder: (column) => column);
+
+  GeneratedColumn<double> get thighCm =>
+      $composableBuilder(column: $table.thighCm, builder: (column) => column);
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
+}
+
+class $$BodyMeasurementsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $BodyMeasurementsTable,
+          BodyMeasurement,
+          $$BodyMeasurementsTableFilterComposer,
+          $$BodyMeasurementsTableOrderingComposer,
+          $$BodyMeasurementsTableAnnotationComposer,
+          $$BodyMeasurementsTableCreateCompanionBuilder,
+          $$BodyMeasurementsTableUpdateCompanionBuilder,
+          (
+            BodyMeasurement,
+            BaseReferences<
+              _$AppDatabase,
+              $BodyMeasurementsTable,
+              BodyMeasurement
+            >,
+          ),
+          BodyMeasurement,
+          PrefetchHooks Function()
+        > {
+  $$BodyMeasurementsTableTableManager(
+    _$AppDatabase db,
+    $BodyMeasurementsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$BodyMeasurementsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$BodyMeasurementsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$BodyMeasurementsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> date = const Value.absent(),
+                Value<double?> waistCm = const Value.absent(),
+                Value<double?> chestCm = const Value.absent(),
+                Value<double?> hipsCm = const Value.absent(),
+                Value<double?> armCm = const Value.absent(),
+                Value<double?> thighCm = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => BodyMeasurementsCompanion(
+                id: id,
+                date: date,
+                waistCm: waistCm,
+                chestCm: chestCm,
+                hipsCm: hipsCm,
+                armCm: armCm,
+                thighCm: thighCm,
+                notes: notes,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required DateTime date,
+                Value<double?> waistCm = const Value.absent(),
+                Value<double?> chestCm = const Value.absent(),
+                Value<double?> hipsCm = const Value.absent(),
+                Value<double?> armCm = const Value.absent(),
+                Value<double?> thighCm = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => BodyMeasurementsCompanion.insert(
+                id: id,
+                date: date,
+                waistCm: waistCm,
+                chestCm: chestCm,
+                hipsCm: hipsCm,
+                armCm: armCm,
+                thighCm: thighCm,
+                notes: notes,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$BodyMeasurementsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $BodyMeasurementsTable,
+      BodyMeasurement,
+      $$BodyMeasurementsTableFilterComposer,
+      $$BodyMeasurementsTableOrderingComposer,
+      $$BodyMeasurementsTableAnnotationComposer,
+      $$BodyMeasurementsTableCreateCompanionBuilder,
+      $$BodyMeasurementsTableUpdateCompanionBuilder,
+      (
+        BodyMeasurement,
+        BaseReferences<_$AppDatabase, $BodyMeasurementsTable, BodyMeasurement>,
+      ),
+      BodyMeasurement,
+      PrefetchHooks Function()
+    >;
+typedef $$ProgressPhotosTableCreateCompanionBuilder =
+    ProgressPhotosCompanion Function({
+      required String id,
+      required DateTime date,
+      required String filePath,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+typedef $$ProgressPhotosTableUpdateCompanionBuilder =
+    ProgressPhotosCompanion Function({
+      Value<String> id,
+      Value<DateTime> date,
+      Value<String> filePath,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+class $$ProgressPhotosTableFilterComposer
+    extends Composer<_$AppDatabase, $ProgressPhotosTable> {
+  $$ProgressPhotosTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get filePath => $composableBuilder(
+    column: $table.filePath,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ProgressPhotosTableOrderingComposer
+    extends Composer<_$AppDatabase, $ProgressPhotosTable> {
+  $$ProgressPhotosTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get filePath => $composableBuilder(
+    column: $table.filePath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ProgressPhotosTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ProgressPhotosTable> {
+  $$ProgressPhotosTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<String> get filePath =>
+      $composableBuilder(column: $table.filePath, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$ProgressPhotosTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ProgressPhotosTable,
+          ProgressPhoto,
+          $$ProgressPhotosTableFilterComposer,
+          $$ProgressPhotosTableOrderingComposer,
+          $$ProgressPhotosTableAnnotationComposer,
+          $$ProgressPhotosTableCreateCompanionBuilder,
+          $$ProgressPhotosTableUpdateCompanionBuilder,
+          (
+            ProgressPhoto,
+            BaseReferences<_$AppDatabase, $ProgressPhotosTable, ProgressPhoto>,
+          ),
+          ProgressPhoto,
+          PrefetchHooks Function()
+        > {
+  $$ProgressPhotosTableTableManager(
+    _$AppDatabase db,
+    $ProgressPhotosTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ProgressPhotosTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ProgressPhotosTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ProgressPhotosTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> date = const Value.absent(),
+                Value<String> filePath = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ProgressPhotosCompanion(
+                id: id,
+                date: date,
+                filePath: filePath,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required DateTime date,
+                required String filePath,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ProgressPhotosCompanion.insert(
+                id: id,
+                date: date,
+                filePath: filePath,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ProgressPhotosTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ProgressPhotosTable,
+      ProgressPhoto,
+      $$ProgressPhotosTableFilterComposer,
+      $$ProgressPhotosTableOrderingComposer,
+      $$ProgressPhotosTableAnnotationComposer,
+      $$ProgressPhotosTableCreateCompanionBuilder,
+      $$ProgressPhotosTableUpdateCompanionBuilder,
+      (
+        ProgressPhoto,
+        BaseReferences<_$AppDatabase, $ProgressPhotosTable, ProgressPhoto>,
+      ),
+      ProgressPhoto,
+      PrefetchHooks Function()
+    >;
+typedef $$HabitsTableCreateCompanionBuilder =
+    HabitsCompanion Function({
+      required String id,
+      required String name,
+      Value<bool> archived,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+typedef $$HabitsTableUpdateCompanionBuilder =
+    HabitsCompanion Function({
+      Value<String> id,
+      Value<String> name,
+      Value<bool> archived,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+final class $$HabitsTableReferences
+    extends BaseReferences<_$AppDatabase, $HabitsTable, Habit> {
+  $$HabitsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$HabitCompletionsTable, List<HabitCompletion>>
+  _completionsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.habitCompletions,
+    aliasName: 'habits__id__habit_completions__habit_id',
+  );
+
+  $$HabitCompletionsTableProcessedTableManager get completions {
+    final manager = $$HabitCompletionsTableTableManager(
+      $_db,
+      $_db.habitCompletions,
+    ).filter((f) => f.habitId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_completionsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$HabitsTableFilterComposer
+    extends Composer<_$AppDatabase, $HabitsTable> {
+  $$HabitsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get archived => $composableBuilder(
+    column: $table.archived,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> completions(
+    Expression<bool> Function($$HabitCompletionsTableFilterComposer f) f,
+  ) {
+    final $$HabitCompletionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.habitCompletions,
+      getReferencedColumn: (t) => t.habitId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HabitCompletionsTableFilterComposer(
+            $db: $db,
+            $table: $db.habitCompletions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$HabitsTableOrderingComposer
+    extends Composer<_$AppDatabase, $HabitsTable> {
+  $$HabitsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get archived => $composableBuilder(
+    column: $table.archived,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$HabitsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $HabitsTable> {
+  $$HabitsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<bool> get archived =>
+      $composableBuilder(column: $table.archived, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  Expression<T> completions<T extends Object>(
+    Expression<T> Function($$HabitCompletionsTableAnnotationComposer a) f,
+  ) {
+    final $$HabitCompletionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.habitCompletions,
+      getReferencedColumn: (t) => t.habitId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HabitCompletionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.habitCompletions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$HabitsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $HabitsTable,
+          Habit,
+          $$HabitsTableFilterComposer,
+          $$HabitsTableOrderingComposer,
+          $$HabitsTableAnnotationComposer,
+          $$HabitsTableCreateCompanionBuilder,
+          $$HabitsTableUpdateCompanionBuilder,
+          (Habit, $$HabitsTableReferences),
+          Habit,
+          PrefetchHooks Function({bool completions})
+        > {
+  $$HabitsTableTableManager(_$AppDatabase db, $HabitsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$HabitsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$HabitsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$HabitsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<bool> archived = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => HabitsCompanion(
+                id: id,
+                name: name,
+                archived: archived,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String name,
+                Value<bool> archived = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => HabitsCompanion.insert(
+                id: id,
+                name: name,
+                archived: archived,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) =>
+                    (e.readTable(table), $$HabitsTableReferences(db, table, e)),
+              )
+              .toList(),
+          prefetchHooksCallback: ({completions = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (completions) db.habitCompletions],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (completions)
+                    await $_getPrefetchedData<
+                      Habit,
+                      $HabitsTable,
+                      HabitCompletion
+                    >(
+                      currentTable: table,
+                      referencedTable: $$HabitsTableReferences
+                          ._completionsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$HabitsTableReferences(db, table, p0).completions,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.habitId == item.id),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$HabitsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $HabitsTable,
+      Habit,
+      $$HabitsTableFilterComposer,
+      $$HabitsTableOrderingComposer,
+      $$HabitsTableAnnotationComposer,
+      $$HabitsTableCreateCompanionBuilder,
+      $$HabitsTableUpdateCompanionBuilder,
+      (Habit, $$HabitsTableReferences),
+      Habit,
+      PrefetchHooks Function({bool completions})
+    >;
+typedef $$HabitCompletionsTableCreateCompanionBuilder =
+    HabitCompletionsCompanion Function({
+      required String id,
+      required String habitId,
+      required DateTime date,
+      Value<int> rowid,
+    });
+typedef $$HabitCompletionsTableUpdateCompanionBuilder =
+    HabitCompletionsCompanion Function({
+      Value<String> id,
+      Value<String> habitId,
+      Value<DateTime> date,
+      Value<int> rowid,
+    });
+
+final class $$HabitCompletionsTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $HabitCompletionsTable, HabitCompletion> {
+  $$HabitCompletionsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $HabitsTable _habitIdTable(_$AppDatabase db) =>
+      db.habits.createAlias('habit_completions__habit_id__habits__id');
+
+  $$HabitsTableProcessedTableManager get habitId {
+    final $_column = $_itemColumn<String>('habit_id')!;
+
+    final manager = $$HabitsTableTableManager(
+      $_db,
+      $_db.habits,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_habitIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$HabitCompletionsTableFilterComposer
+    extends Composer<_$AppDatabase, $HabitCompletionsTable> {
+  $$HabitCompletionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$HabitsTableFilterComposer get habitId {
+    final $$HabitsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.habitId,
+      referencedTable: $db.habits,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HabitsTableFilterComposer(
+            $db: $db,
+            $table: $db.habits,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$HabitCompletionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $HabitCompletionsTable> {
+  $$HabitCompletionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$HabitsTableOrderingComposer get habitId {
+    final $$HabitsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.habitId,
+      referencedTable: $db.habits,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HabitsTableOrderingComposer(
+            $db: $db,
+            $table: $db.habits,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$HabitCompletionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $HabitCompletionsTable> {
+  $$HabitCompletionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  $$HabitsTableAnnotationComposer get habitId {
+    final $$HabitsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.habitId,
+      referencedTable: $db.habits,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HabitsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.habits,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$HabitCompletionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $HabitCompletionsTable,
+          HabitCompletion,
+          $$HabitCompletionsTableFilterComposer,
+          $$HabitCompletionsTableOrderingComposer,
+          $$HabitCompletionsTableAnnotationComposer,
+          $$HabitCompletionsTableCreateCompanionBuilder,
+          $$HabitCompletionsTableUpdateCompanionBuilder,
+          (HabitCompletion, $$HabitCompletionsTableReferences),
+          HabitCompletion,
+          PrefetchHooks Function({bool habitId})
+        > {
+  $$HabitCompletionsTableTableManager(
+    _$AppDatabase db,
+    $HabitCompletionsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$HabitCompletionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$HabitCompletionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$HabitCompletionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> habitId = const Value.absent(),
+                Value<DateTime> date = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => HabitCompletionsCompanion(
+                id: id,
+                habitId: habitId,
+                date: date,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String habitId,
+                required DateTime date,
+                Value<int> rowid = const Value.absent(),
+              }) => HabitCompletionsCompanion.insert(
+                id: id,
+                habitId: habitId,
+                date: date,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$HabitCompletionsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({habitId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (habitId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.habitId,
+                                referencedTable:
+                                    $$HabitCompletionsTableReferences
+                                        ._habitIdTable(db),
+                                referencedColumn:
+                                    $$HabitCompletionsTableReferences
+                                        ._habitIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$HabitCompletionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $HabitCompletionsTable,
+      HabitCompletion,
+      $$HabitCompletionsTableFilterComposer,
+      $$HabitCompletionsTableOrderingComposer,
+      $$HabitCompletionsTableAnnotationComposer,
+      $$HabitCompletionsTableCreateCompanionBuilder,
+      $$HabitCompletionsTableUpdateCompanionBuilder,
+      (HabitCompletion, $$HabitCompletionsTableReferences),
+      HabitCompletion,
+      PrefetchHooks Function({bool habitId})
+    >;
+typedef $$CycleEntriesTableCreateCompanionBuilder =
+    CycleEntriesCompanion Function({
+      required String id,
+      required DateTime startDate,
+      Value<String?> notes,
+      Value<int> rowid,
+    });
+typedef $$CycleEntriesTableUpdateCompanionBuilder =
+    CycleEntriesCompanion Function({
+      Value<String> id,
+      Value<DateTime> startDate,
+      Value<String?> notes,
+      Value<int> rowid,
+    });
+
+class $$CycleEntriesTableFilterComposer
+    extends Composer<_$AppDatabase, $CycleEntriesTable> {
+  $$CycleEntriesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$CycleEntriesTableOrderingComposer
+    extends Composer<_$AppDatabase, $CycleEntriesTable> {
+  $$CycleEntriesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$CycleEntriesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CycleEntriesTable> {
+  $$CycleEntriesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
+}
+
+class $$CycleEntriesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $CycleEntriesTable,
+          CycleEntry,
+          $$CycleEntriesTableFilterComposer,
+          $$CycleEntriesTableOrderingComposer,
+          $$CycleEntriesTableAnnotationComposer,
+          $$CycleEntriesTableCreateCompanionBuilder,
+          $$CycleEntriesTableUpdateCompanionBuilder,
+          (
+            CycleEntry,
+            BaseReferences<_$AppDatabase, $CycleEntriesTable, CycleEntry>,
+          ),
+          CycleEntry,
+          PrefetchHooks Function()
+        > {
+  $$CycleEntriesTableTableManager(_$AppDatabase db, $CycleEntriesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CycleEntriesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CycleEntriesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CycleEntriesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> startDate = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => CycleEntriesCompanion(
+                id: id,
+                startDate: startDate,
+                notes: notes,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required DateTime startDate,
+                Value<String?> notes = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => CycleEntriesCompanion.insert(
+                id: id,
+                startDate: startDate,
+                notes: notes,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$CycleEntriesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $CycleEntriesTable,
+      CycleEntry,
+      $$CycleEntriesTableFilterComposer,
+      $$CycleEntriesTableOrderingComposer,
+      $$CycleEntriesTableAnnotationComposer,
+      $$CycleEntriesTableCreateCompanionBuilder,
+      $$CycleEntriesTableUpdateCompanionBuilder,
+      (
+        CycleEntry,
+        BaseReferences<_$AppDatabase, $CycleEntriesTable, CycleEntry>,
+      ),
+      CycleEntry,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -8055,4 +11332,14 @@ class $AppDatabaseManager {
       $$CoachingRunsTableTableManager(_db, _db.coachingRuns);
   $$DayOverridesTableTableManager get dayOverrides =>
       $$DayOverridesTableTableManager(_db, _db.dayOverrides);
+  $$BodyMeasurementsTableTableManager get bodyMeasurements =>
+      $$BodyMeasurementsTableTableManager(_db, _db.bodyMeasurements);
+  $$ProgressPhotosTableTableManager get progressPhotos =>
+      $$ProgressPhotosTableTableManager(_db, _db.progressPhotos);
+  $$HabitsTableTableManager get habits =>
+      $$HabitsTableTableManager(_db, _db.habits);
+  $$HabitCompletionsTableTableManager get habitCompletions =>
+      $$HabitCompletionsTableTableManager(_db, _db.habitCompletions);
+  $$CycleEntriesTableTableManager get cycleEntries =>
+      $$CycleEntriesTableTableManager(_db, _db.cycleEntries);
 }

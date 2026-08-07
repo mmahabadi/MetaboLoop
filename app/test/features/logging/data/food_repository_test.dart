@@ -133,6 +133,69 @@ void main() {
   );
 
   test(
+    'lookupBarcode persists fiber/sugar/sodium from the remote product',
+    () async {
+      final mock = MockClient((request) async {
+        return http.Response(
+          jsonEncode({
+            'status': 1,
+            'product': {
+              'code': '444',
+              'product_name': 'Lentils',
+              'nutriments': {
+                'energy-kcal_100g': 116,
+                'proteins_100g': 9,
+                'carbohydrates_100g': 20,
+                'fat_100g': 0.4,
+                'fiber_100g': 7.9,
+                'sugars_100g': 1.8,
+                'sodium_100g': 0.002,
+              },
+            },
+          }),
+          200,
+        );
+      });
+      final repo = FoodRepository(db, OpenFoodFactsClient(httpClient: mock));
+
+      final food = await repo.lookupBarcode('444');
+
+      expect(food, isNotNull);
+      expect(food!.fiberPer100gGrams, 7.9);
+      expect(food.sugarPer100gGrams, 1.8);
+      expect(food.sodiumPer100gMg, closeTo(2, 0.001));
+
+      final cached = await db.getFoodByBarcode('444');
+      expect(cached!.fiberPer100gGrams, 7.9);
+      expect(cached.sugarPer100gGrams, 1.8);
+      expect(cached.sodiumPer100gMg, closeTo(2, 0.001));
+    },
+  );
+
+  test(
+    'createCustomFood persists optional fiber/sugar/sodium values',
+    () async {
+      final mock = MockClient((request) async => http.Response('', 503));
+      final repo = FoodRepository(db, OpenFoodFactsClient(httpClient: mock));
+
+      final food = await repo.createCustomFood(
+        name: 'High-fiber cereal',
+        caloriesPer100g: 350,
+        proteinPer100gGrams: 10,
+        carbsPer100gGrams: 70,
+        fatPer100gGrams: 3,
+        fiberPer100gGrams: 15,
+        sugarPer100gGrams: 4,
+        sodiumPer100gMg: 300,
+      );
+
+      expect(food.fiberPer100gGrams, 15);
+      expect(food.sugarPer100gGrams, 4);
+      expect(food.sodiumPer100gMg, 300);
+    },
+  );
+
+  test(
     'search still returns local results when the network is unreachable',
     () async {
       final mock = MockClient(
