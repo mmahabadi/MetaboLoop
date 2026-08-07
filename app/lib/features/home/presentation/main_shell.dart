@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../logging/presentation/today_screen.dart';
+
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
 
@@ -11,7 +13,7 @@ class _MainShellState extends State<MainShell> {
   int _index = 0;
 
   static const _tabs = [
-    _TabSpec(icon: Icons.today_rounded, label: 'Today', phase: 'Phase 2'),
+    _TabSpec(icon: Icons.today_rounded, label: 'Today'),
     _TabSpec(icon: Icons.show_chart_rounded, label: 'Trends', phase: 'Phase 4'),
     _TabSpec(
       icon: Icons.psychology_alt_rounded,
@@ -26,8 +28,10 @@ class _MainShellState extends State<MainShell> {
     final tab = _tabs[_index];
 
     return Scaffold(
-      appBar: AppBar(title: Text(tab.label)),
-      body: _ComingSoon(tab: tab),
+      // The Today tab supplies its own AppBar (date navigation) and FAB;
+      // other tabs share this outer chrome until their phase builds them.
+      appBar: tab.phase == null ? null : AppBar(title: Text(tab.label)),
+      body: tab.phase == null ? const TodayScreen() : _ComingSoon(tab: tab),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() => _index = i),
@@ -42,15 +46,11 @@ class _MainShellState extends State<MainShell> {
 }
 
 class _TabSpec {
-  const _TabSpec({
-    required this.icon,
-    required this.label,
-    required this.phase,
-  });
+  const _TabSpec({required this.icon, required this.label, this.phase});
 
   final IconData icon;
   final String label;
-  final String phase;
+  final String? phase;
 }
 
 class _ComingSoon extends StatelessWidget {

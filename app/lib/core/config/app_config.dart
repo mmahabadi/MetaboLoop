@@ -6,9 +6,12 @@ abstract final class AppConfig {
   static const supabaseUrl = String.fromEnvironment('SUPABASE_URL');
   static const supabaseAnonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
   static const revenueCatApiKey = String.fromEnvironment('REVENUECAT_API_KEY');
+  static const geminiApiKey = String.fromEnvironment('GEMINI_API_KEY');
 
   static bool get isSupabaseConfigured =>
       supabaseUrl.isNotEmpty && supabaseAnonKey.isNotEmpty;
 
   static bool get isRevenueCatConfigured => revenueCatApiKey.isNotEmpty;
+
+  static bool get isGeminiConfigured => geminiApiKey.isNotEmpty;
 }
