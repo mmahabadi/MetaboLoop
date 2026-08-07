@@ -1,19 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/config/app_config.dart';
 import '../../../core/router/app_router.dart';
+import '../../coaching/application/coaching_providers.dart';
+import '../../onboarding/application/onboarding_controller.dart';
 import '../domain/subscription_tier.dart';
 
-class PaywallScreen extends StatefulWidget {
+class PaywallScreen extends ConsumerStatefulWidget {
   const PaywallScreen({super.key});
 
   @override
-  State<PaywallScreen> createState() => _PaywallScreenState();
+  ConsumerState<PaywallScreen> createState() => _PaywallScreenState();
 }
 
-class _PaywallScreenState extends State<PaywallScreen> {
+class _PaywallScreenState extends ConsumerState<PaywallScreen> {
   SubscriptionTier _selected = SubscriptionTier.annual;
+
+  /// Persists the goal and seeds the first versioned target from the
+  /// onboarding estimate, so Phase 3's coaching algorithm and Coach tab
+  /// have something to work from as soon as the user reaches the app —
+  /// runs regardless of which button they tap, since either way
+  /// onboarding is now complete.
+  Future<void> _completeOnboarding() async {
+    final onboarding = ref.read(onboardingControllerProvider);
+    final goal = onboarding.goal;
+    final estimate = onboarding.estimate;
+    try {
+      if (goal != null) {
+        await ref.read(userGoalSettingsProvider).setGoal(goal);
+      }
+      if (estimate != null) {
+        await ref.read(coachingServiceProvider).ensureInitialTarget(estimate);
+      }
+    } catch (_) {
+      // No local database on this platform yet (e.g. web — see
+      // core/database/connection/web_connection.dart). Onboarding still
+      // completes; the Coach tab surfaces the same "not available" state.
+    }
+    if (mounted) context.go(AppRoutes.home);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,13 +161,13 @@ class _PaywallScreenState extends State<PaywallScreen> {
               ],
               const Spacer(),
               FilledButton(
-                onPressed: () => context.go(AppRoutes.home),
+                onPressed: _completeOnboarding,
                 child: const Text('Start free trial'),
               ),
               const SizedBox(height: 8),
               Center(
                 child: TextButton(
-                  onPressed: () => context.go(AppRoutes.home),
+                  onPressed: _completeOnboarding,
                   child: const Text('Not now'),
                 ),
               ),

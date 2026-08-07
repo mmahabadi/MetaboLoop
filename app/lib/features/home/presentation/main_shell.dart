@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../coaching/presentation/coach_screen.dart';
 import '../../logging/presentation/today_screen.dart';
 
 class MainShell extends StatefulWidget {
@@ -13,12 +14,16 @@ class _MainShellState extends State<MainShell> {
   int _index = 0;
 
   static const _tabs = [
-    _TabSpec(icon: Icons.today_rounded, label: 'Today'),
+    _TabSpec(
+      icon: Icons.today_rounded,
+      label: 'Today',
+      builder: TodayScreen.new,
+    ),
     _TabSpec(icon: Icons.show_chart_rounded, label: 'Trends', phase: 'Phase 4'),
     _TabSpec(
       icon: Icons.psychology_alt_rounded,
       label: 'Coach',
-      phase: 'Phase 3',
+      builder: CoachScreen.new,
     ),
     _TabSpec(icon: Icons.settings_rounded, label: 'Settings', phase: 'Phase 5'),
   ];
@@ -28,10 +33,10 @@ class _MainShellState extends State<MainShell> {
     final tab = _tabs[_index];
 
     return Scaffold(
-      // The Today tab supplies its own AppBar (date navigation) and FAB;
-      // other tabs share this outer chrome until their phase builds them.
-      appBar: tab.phase == null ? null : AppBar(title: Text(tab.label)),
-      body: tab.phase == null ? const TodayScreen() : _ComingSoon(tab: tab),
+      // Tabs with their own screen supply their own AppBar/FAB; others
+      // share this outer chrome until their phase builds them.
+      appBar: tab.builder != null ? null : AppBar(title: Text(tab.label)),
+      body: tab.builder != null ? tab.builder!() : _ComingSoon(tab: tab),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() => _index = i),
@@ -46,11 +51,17 @@ class _MainShellState extends State<MainShell> {
 }
 
 class _TabSpec {
-  const _TabSpec({required this.icon, required this.label, this.phase});
+  const _TabSpec({
+    required this.icon,
+    required this.label,
+    this.phase,
+    this.builder,
+  });
 
   final IconData icon;
   final String label;
   final String? phase;
+  final Widget Function()? builder;
 }
 
 class _ComingSoon extends StatelessWidget {
